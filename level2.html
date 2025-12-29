@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindLab - Level 2</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<style>
+    :root {
+        --bg: #0f172a;
+        --primary: #6c63ff;
+        --text-main: #f1f5f9;
+        --card-bg: #ffffff;
+        --mind: #3b82f6;
+        --ego: #ef4444;
+        --attitude: #a855f7;
+        --help: #22c55e;
+    }
+
+    .container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    header {
+        text-align: center;
+        margin-bottom: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .level-tag {
+        background: #ffffff;
+        color: var(--primary);
+        padding: 15px;
+        border-radius: 10px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        border: 1px solid var(--primary);
+    }
+
+    h2 {
+        font-size: 29px;
+        background: linear-gradient(90deg, #38bdf8, #a855f7);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-top: 15px;
+    }
+
+    .question-card {
+        background: white;
+        border-radius: 10px;
+        width: 100%;
+        padding: 20px;
+        border: 1px solid;
+        margin-bottom: 20px;
+        border: 1px solid #e6e7eb;
+        display: flex;
+        align-items: left;
+        justify-content: center;
+        flex-direction: column;
+        animation: slideUp 0.5s ease;
+    }
+
+    .question-card h3 {
+        font-size: 20px;
+        width: 100%;
+        text-align: left;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .options {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    @media (max-width: 650px) {
+        .options {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    label {
+        width: 80%;
+        padding: 14px;
+        border: 1px solid #e6e7eb;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: left;
+        color: #222222;
+        background-color: transparent;
+    }
+
+    label:hover {
+        background: #6c63ff1a;
+        border-color: var(--primary);
+    }
+
+    input[type="radio"] {
+        margin-right: 10px;
+        margin-left: 20px;
+        accent-color: #6c63ff;
+        transition: all 0.3s;
+    }
+
+    label:has(input:checked) {
+        background-color: #ffffff;
+        border: 1px solid #6c63ff;
+        color: #0f172a;
+        font-weight: bold;
+    }
+
+    .submit-btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 250px;
+        height: 50px;
+        max-width: 300px;
+        margin: 40px auto;
+        gap: 10px;
+        background-color: #6c63ff;
+        border-radius: 10px;
+        color: rgb(255, 255, 255);
+        border: 1px solid #e6e7eb;
+        transition: all 0.2s;
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 15px 25px rgba(0, 0, 0, 0.137);
+    }
+
+    #result {
+        display: none;
+        text-align: center;
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        width: 90%;
+        animation: slideUp 0.8s ease;
+    }
+
+    .main-result-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+    }
+
+    .core-circle {
+        width: 220px;
+        height: 220px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: conic-gradient(var(--primary) calc(var(--percent) * 1%), #f1f5f9 0);
+        position: relative;
+        transition: --percent 0.5s;
+    }
+
+    .inner-circle {
+        width: 180px;
+        height: 180px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .inner-circle strong {
+        font-size: 40px;
+        color: var(--bg);
+    }
+
+    .inner-circle span {
+        font-size: 14px;
+        color: var(--primary);
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .stats-grid {
+        width: 100%;
+        max-width: 400px;
+        text-align: left;
+    }
+
+    .stat-item {
+        margin-bottom: 15px;
+    }
+
+    .stat-item span {
+        font-size: 12px;
+        font-weight: bold;
+        color: #64748b;
+    }
+
+    .bar-bg {
+        width: 100%;
+        height: 8px;
+        background: #f1f5f9;
+        border-radius: 10px;
+        margin-top: 5px;
+        overflow: hidden;
+    }
+
+    .bar-fill {
+        height: 100%;
+        border-radius: 10px;
+        transition: width 1s ease-out;
+    }
+
+
+    .submit-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 15px 25px rgba(0, 0, 0, 0.137);
+    }
+
+    .stats-summary {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+        margin-top: 20px;
+        font-size: 12px;
+        color: #64748b;
+    }
+
+    .summary-item {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .summary-item strong {
+        color: var(--primary);
+        font-size: 16px;
+    }
+
+    @media screen and (max-width:425px) {
+        .question-card {
+            width: 85%;
+        }
+
+        .question-card h3 {
+            font-size: 14px;
+            font-weight: 100;
+        }
+
+        .options {
+            gap: 0px;
+        }
+
+        label {
+            padding: 0px;
+            border: 1px solid transparent;
+        }
+
+        label:has(input:checked) {
+            border: 1px solid transparent;
+
+        }
+    }
+</style>
+
+<body>
+    <div class="trns">
+        <a href="hlevel2.html">
+            <img src="icone/language-translation-svgrepo-com.svg" alt="">
+        </a>
+    </div>
+    <div class="head">
+        <nav>
+            <div class="logo">
+                <img src="colored-logo.png">
+                <span>MINDLAB</span>
+            </div>
+            <div class="menu">
+                <a href="index.html">HOME</a>
+                <a href="levels.html">LEVELS</a>
+                <a href="motivation.html">MOTIVATION</a>
+                <a href="improve.html">IMPROVE YOURSELF</a>
+                <a href="book.html">BOOKS</a>
+                <a class="bbb" href="levels.html">START<img src="icone/white-roket.svg" width="16px"></a>
+            </div>
+            <button class="menu1" onclick="openNav()"><img src="icone/menu-01-stroke-rounded.svg" width="25px"></button>
+            <div id="mySidenav" class="slider">
+                <div class="co">
+                    <button class="closebtn" onclick="closeNav()"><img
+                            src="icone/cancel-01-stroke-rounded.svg"></button>
+                    <div class="ho"></div>
+                    <div class="li">
+                        <a href="index.html"><img src="icone/home-09-stroke-rounded (1).svg" alt="">HOME</a>
+                        <a href="motivation.html"><img src="icone/idea-stroke-rounded (1).svg" alt="">QUOTES</a>
+                        <a class="acti" href="levels.html"><img src="icone/trade-up-stroke-rounded.svg"
+                                alt=""><span>LEVEL</span></a>
+                        <a href="improve.html"><img src="icone/activity-01-stroke-rounded (1).svg" alt="">IMPROVE</a>
+                        <a href="book.html"><img src="icone/book-02-stroke-rounded (1).svg" alt="">BOOK</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div class="main">
+        <div class="container">
+            <header>
+                <span class="level-tag" style="margin-top: 20px;">LEVEL 2 - PSYCHOLOGICAL DEPTH</span>
+                <h2>The Labyrinth of Conscience</h2>
+                <p style="color: #64748b;">Basic sawalo se upar uth kar, ab waqt hai apne andar ki gehrayi ko samajhne
+                    ka.
+                    In 20 sawalo mein koi "Hero" ya "Villain" nahi hai, sirf aapki asliyat hai.</p>
+            </header>
+
+            <div id="quiz-container"></div>
+
+            <button id="main-submit" class="submit-btn" onclick="calculateResult()">Generate Mental Portrait</button>
+
+            <div id="result">
+                <h2 style="color: var(--bg); margin-bottom: 10px;">Your Mind Synthesis</h2>
+                <p style="color: #64748b; margin-bottom: 30px;">Analyzing your subconscious patterns...</p>
+
+                <div class="main-result-container">
+                    <div class="core-circle" id="coreScore" style="--percent: 0;">
+                        <div class="inner-circle">
+                            <span id="personality-label" style="letter-spacing: 1px;">Analyzing...</span>
+                            <strong id="main-percent">0%</strong>
+                            <small style="color: #94a3b8; font-size: 10px; margin-top: 5px;">OVERALL SCORE</small>
+                        </div>
+                    </div>
+
+                    <div class="stats-summary"
+                        style="display: flex; justify-content: space-around; width: 100%; margin-top: 20px;">
+                        <div class="summary-item"><span>MIND</span><br><strong id="sum-m"
+                                style="color:var(--mind)">0%</strong></div>
+                        <div class="summary-item"><span>EGO</span><br><strong id="sum-e"
+                                style="color:var(--ego)">0%</strong></div>
+                        <div class="summary-item"><span>ATTITUDE</span><br><strong id="sum-a"
+                                style="color:var(--attitude)">0%</strong></div>
+                        <div class="summary-item"><span>HELP</span><br><strong id="sum-h"
+                                style="color:var(--help)">0%</strong></div>
+                    </div>
+                </div>
+
+                <button class="submit-btn" style="margin-top: 30px;" onclick="location.reload()">Re-Take Test</button>
+            </div>
+        </div>
+    </div>
+    <div class="foot">
+        <div class="footer">
+            <div class="foot-logo">
+                <div class="lo">
+                    <img src="colored-logo.png" width="30px">
+                    MINDLAB
+                </div>
+                <h3>Understand your mind. Improve your life.</h3>
+                <p>MindLab helps you analyze your personality, mindset, ego, and habits through smart questions and
+                    self-growth guidance.</p>
+            </div>
+            <div class="lin">
+                <div class="foot-links">
+                    <h4>Quick Links</h4>
+                    <br>
+                    <a href="index.html">Home</a>
+                    <a href="levels.html">Level</a>
+                    <a href="motivation.html">Motivation</a>
+                    <a href="improve.html">Improve Yourself</a>
+                </div>
+                <div class="foot-features">
+                    <h4>FEATURES</h4>
+                    <br>
+                    <a href="levels.html">Ego Level</a>
+                    <a href="levels.html">Attitude Balance</a>
+                    <a href="levels.html">Sharp Mind</a>
+                    <a href="levels.html">Helpfulness</a>
+                </div>
+            </div>
+        </div>
+        <div class="copy">
+            <div class="dis">
+                <span>This website is created for educational purposes only. The personality results are not medical or
+                    psychological advice.</span>
+            </div>
+            <div class="rights">
+                <span>© 2025 MindLab. All rights reserved.
+                </span>
+            </div>
+        </div>
+    </div>
+    <div id="loader">
+        <div class="loader-box">
+            <div class="ring">
+                <img src="img/maze.gif" width="40px">
+            </div>
+            <div class="bx">
+                <span>MINDLAB</span>
+                <small>Fuel Your Mind</small>
+            </div>
+        </div>
+    </div>
+    <script>
+        function openNav() { document.getElementById("mySidenav").style.width = "60px"; }
+        function closeNav() { document.getElementById("mySidenav").style.width = "0"; }
+
+        const questionPool = [
+            { q: "You find out your mentor became successful by framing innocent people. Now that innocent person is asking for your help to take revenge:", options: [{ t: "I will betray my mentor and help the innocent person", a: 20 }, { t: "I will make them fight and reach the top myself", e: 25 }, { t: "I will silence the innocent person to save my mentor", h: 15 }, { t: "I will monitor the situation to see who has the upper hand", m: 20 }] },
+
+            { q: "To save 1000 people, you must sacrifice an innocent child. What will you do?", options: [{ t: "I will save the 1000; their value is more than one", m: 25 }, { t: "No, I do not want to become a murderer", a: 20 }, { t: "I will convince the innocent to sacrifice themselves", h: 20 }, { t: "I will pin the blame for the sacrifice on someone else", e: 25 }] },
+
+            { q: "You have the button to destroy your enemy, but along with them, their innocent family's home will also burn:", options: [{ t: "I will press the button; destroying the enemy is the priority", e: 25 }, { t: "I will let it go, but keep the enemy under my debt", h: 20 }, { t: "I will make a plan where only the enemy is destroyed", m: 25 }, { t: "I will end the enmity altogether", a: 20 }] },
+
+            { q: "The world will end in 1 year. There is only 1 seat left in the spaceship. Is it yours or a pregnant woman's?", options: [{ t: "It's mine; I don't want to die", e: 25 }, { t: "I will give it to the woman so the next generation survives", h: 25 }, { t: "I will destroy the spaceship; we all die together", a: 20 }, { t: "I will sell the seat at a high price", m: 15 }] },
+
+            { q: "Your friend is a murderer, but they committed the crime to save your life. The police are at your door:", options: [{ t: "I will hand over my friend; the law comes first", a: 20 }, { t: "I will give false testimony to save them", h: 25 }, { t: "I will help the friend escape but cut ties forever", m: 20 }, { t: "I will blackmail the friend so they stay under my control", e: 25 }] },
+
+            { q: "You get a chance to be 'Immortal,' but every 10 years you must wipe the memory of a loved one:", options: [{ t: "Accepted; this is the price of power", e: 25 }, { t: "No, memories are what make life", h: 25 }, { t: "I will live alone without loved ones to avoid the pain", a: 20 }, { t: "I will hack the machine to change the rules", m: 25 }] },
+
+            { q: "Your enemy is close to death and only your blood group matches. What will you do?", options: [{ t: "I will give blood; humanity is greater", h: 25 }, { t: "I will refuse; death is their karma", e: 25 }, { t: "I will demand all their property in exchange for blood", m: 25 }, { t: "I will simply disappear from the hospital", a: 20 }] },
+
+            { q: "A machine shows the future. You see that your son will grow up to be a dictator and kill millions:", options: [{ t: "I will control him strictly from childhood", m: 25 }, { t: "I will leave it to fate", a: 20 }, { t: "I will make the harsh decision to kill him", e: 25 }, { t: "I will try to change him with love", h: 20 }] },
+
+            { q: "You achieved success, but the whole world says you cheated, even though you know the truth:", options: [{ t: "I will ignore the world; I have the money", a: 20 }, { t: "I will expose them and take them to court", m: 25 }, { t: "I will throw my success in their faces", e: 25 }, { t: "I will give up the success to keep my image clean", h: 15 }] },
+
+            { q: "You can erase one 'Crime' from the world, but another crime will double in frequency:", options: [{ t: "I will erase Murder (even if theft doubles)", h: 20 }, { t: "I will erase Corruption (even if violence doubles)", m: 25 }, { t: "I will change nothing; balance is necessary", a: 25 }, { t: "I will use the power only to keep myself safe", e: 25 }] },
+
+            { q: "Someone died because of your team's mistake. You are the leader:", options: [{ t: "I will take full responsibility and resign", h: 25 }, { t: "I will make a worker the scapegoat", e: 25 }, { t: "I will fix the system and move forward", m: 20 }, { t: "I will have the legal team suppress the matter", a: 20 }] },
+
+            { q: "You find out that your entire religion/belief system is a lie:", options: [{ t: "I will still follow it for peace of mind", a: 25 }, { t: "I will tell the world the truth and cause chaos", e: 25 }, { t: "I will create my own new system", m: 25 }, { t: "I will accept the truth and remain silent", h: 20 }] },
+
+            { q: "Money vs Peace: You will get 1000 Crores but you can never 'Love' anyone:", options: [{ t: "Money, I will buy the world", e: 25 }, { t: "Peace, money is dust without love", a: 25 }, { t: "I will take the money and do good for people", h: 20 }, { t: "I will find a way to bypass the condition", m: 20 }] },
+
+            { q: "Society's rules are stopping your growth:", options: [{ t: "I will break the rules and move forward", e: 25 }, { t: "I will find a way within the rules", m: 20 }, { t: "I will fight to change the system", h: 25 }, { t: "I will give up growth and choose peace", a: 25 }] },
+
+            { q: "You are offered a bribe that can save 100 orphan children's home, but it is illegal:", options: [{ t: "I will take it; the children's welfare is the priority", h: 25 }, { t: "I will refuse; the wrong path is always wrong", a: 25 }, { t: "I will take it and frame the bribe-giver later", m: 20 }, { t: "I will keep half for myself and give half to the children", e: 25 }] },
+
+            { q: "You find out your biggest enemy is actually your brother:", options: [{ t: "I will forget the relation and continue the enmity", e: 25 }, { t: "I will go far away forever", a: 25 }, { t: "I will tell him the truth and bring him to my side", h: 25 }, { t: "I will use this situation to control him", m: 20 }] },
+
+            { q: "You get the power to write someone's 'Fate,' but in exchange, 10 years will be taken from your life:", options: [{ t: "I will write the fate of my loved ones", h: 25 }, { t: "No, my life is precious to me", a: 25 }, { t: "I will ruin my enemy's fate", e: 25 }, { t: "I will use it scientifically to change the world", m: 25 }] },
+
+            { q: "The company suffered a loss due to your mistake, but the blame has fallen on your junior:", options: [{ t: "I will stay silent; my career is bigger", e: 25 }, { t: "I will accept it and save the junior", h: 25 }, { t: "I will help the junior secretly", m: 15 }, { t: "I will resign without giving a reason", a: 20 }] },
+
+            { q: "Only two people are left in the world: you and someone who hates you:", options: [{ t: "I will kill them so I can live alone in peace", e: 25 }, { t: "I will try to befriend them", h: 20 }, { t: "I will keep them as my servant", m: 25 }, { t: "I will ignore them and go my own way", a: 25 }] },
+
+            { q: "For success, you must do a 'Toxic' act against your morals:", options: [{ t: "I will do it; the result is what matters", e: 25 }, { t: "I will never do it", a: 25 }, { t: "I will find a way to save my morals too", m: 20 }, { t: "I will do it out of compulsion", h: 10 }] },
+
+            { q: "You have to choose between 'Justice' and 'Law':", options: [{ t: "Justice, even if the law must be broken", m: 25 }, { t: "Law, the system is necessary", a: 25 }, { t: "Justice, so that the poor are helped", h: 20 }, { t: "I will create my own law", e: 25 }] },
+
+            { q: "A crowd is beating an innocent person because they think he is a thief:", options: [{ t: "I will join the crowd", e: 20 }, { t: "I will fight the crowd to save the innocent", h: 25 }, { t: "I will call the police and stay away", m: 20 }, { t: "I will watch the spectacle silently", a: 25 }] },
+
+            { q: "You find out your hero (idol) is actually a serial killer:", options: [{ t: "I will expose them", e: 25 }, { t: "I will learn from them how they survived so many years", m: 25 }, { t: "I will ignore it; they do good work", a: 20 }, { t: "I will try to reform them", h: 15 }] },
+
+            { q: "Is life a 'War' or a 'Prison'?", options: [{ t: "War, I must win", e: 25 }, { t: "Prison, I must find freedom", a: 25 }, { t: "War, to protect the weak", h: 20 }, { t: "Prison, to understand the system", m: 25 }] },
+
+            { q: "You know a secret that a major politician is going to be murdered:", options: [{ t: "I will let the murder happen; he is a bad man", e: 25 }, { t: "I will save him; every life is precious", h: 25 }, { t: "I will sell this news at a high price", m: 25 }, { t: "I will remain neutral; not my problem", a: 25 }] },
+
+            { q: "You get the power to erase someone's 'Pain,' but you will feel that pain yourself:", options: [{ t: "I will take everyone's pain", h: 25 }, { t: "Only the pain of those who benefit me", e: 20 }, { t: "No, I cannot bear the pain", a: 25 }, { t: "I will use it to control others", m: 20 }] },
+
+            { q: "You find out your partner is with you only for money:", options: [{ t: "I will ruin them", e: 25 }, { t: "I will leave them without saying a word", a: 25 }, { t: "I will stop giving money to see the truth", m: 25 }, { t: "I will be sad but continue the relationship", h: 10 }] },
+
+            { q: "You must choose between 'Truth' and 'Peace':", options: [{ t: "Truth, even if it causes a fight", m: 25 }, { t: "Peace, even if I must lie", a: 25 }, { t: "Peace, for everyone's happiness", h: 25 }, { t: "Truth, so that I stay in control", e: 25 }] },
+
+            { q: "Your enemy is begging before you:", options: [{ t: "I will forgive", h: 25 }, { t: "I will humiliate them even more", e: 25 }, { t: "I will make them my servant", m: 20 }, { t: "I will ignore them and walk away", a: 25 }] },
+
+            { q: "Final message for the world:", options: [{ t: "I was the king", e: 25 }, { t: "Love is everything", h: 25 }, { t: "Everything is a deception", a: 25 }, { t: "Truth will always triumph", m: 25 }] }
+        ];
+
+        function initQuiz() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+            
+            const selected = [...questionPool].sort(() => 0.5 - Math.random()).slice(0, 20);
+
+            selected.forEach((item, idx) => {
+                const qCard = document.createElement('div');
+                qCard.className = 'question-card';
+                let ops = [...item.options].sort(() => 0.5 - Math.random());
+                let optionsHtml = ops.map(opt => `
+                    <label><input type="radio" name="q${idx}" 
+                    data-m="${opt.m || 0}" data-e="${opt.e || 0}" data-a="${opt.a || 0}" data-h="${opt.h || 0}">
+                    ${opt.t}</label>`).join('');
+                qCard.innerHTML = `<h3>${idx + 1}. ${item.q}</h3><div class="options">${optionsHtml}</div>`;
+                container.appendChild(qCard);
+            });
+        }
+        function calculateResult() {
+            const checked = document.querySelectorAll('input:checked');
+            if (checked.length < 20) return alert("Please answer all questions!");
+
+            let s = { mind: 0, ego: 0, attitude: 0, help: 0 };
+            checked.forEach(o => {
+                s.mind += parseInt(o.dataset.m) || 0;
+                s.ego += parseInt(o.dataset.e) || 0;
+                s.attitude += parseInt(o.dataset.a) || 0;
+                s.help += parseInt(o.dataset.h) || 0;
+            });
+
+            
+            let mPct = Math.min(Math.round((s.mind / 200) * 100), 100);
+            let ePct = Math.min(Math.round((s.ego / 200) * 100), 100);
+            let aPct = Math.min(Math.round((s.attitude / 200) * 100), 100);
+            let hPct = Math.min(Math.round((s.help / 200) * 100), 100);
+
+            
+
+            let balanceScore = (mPct * 0.4) + (aPct * 0.3) + (hPct * 0.3);
+
+            
+            if (ePct > 60) balanceScore -= (ePct - 60); 
+            if (ePct < 15) balanceScore -= 10; 
+
+            let finalUnifiedScore = Math.max(5, Math.min(98, Math.round(balanceScore))); 
+
+            
+            let scores = { "MIND": mPct, "EGO": ePct, "ATTITUDE": aPct, "HELP": hPct };
+            let dominant = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+
+            let title = "";
+            let desc = "";
+
+            if (dominant === "EGO" && ePct > 70) {
+                title = "The Commander";
+                desc = "You drive results but need to work on empathy.";
+            } else if (dominant === "MIND") {
+                title = "The Strategist";
+                desc = "Logical and analytical, you see patterns others miss.";
+            } else if (dominant === "ATTITUDE") {
+                title = "The Stoic";
+                desc = "Emotionally stable and resilient under pressure.";
+            } else if (dominant === "HELP") {
+                title = "The Altruist";
+                desc = "Your strength lies in building and supporting others.";
+            } else {
+                title = "The Balanced Soul";
+                desc = "You have a rare harmony between ego and empathy.";
+            }
+
+            
+            document.getElementById('personality-label').innerText = title;
+            document.getElementById('sum-m').innerText = mPct + '%';
+            document.getElementById('sum-e').innerText = ePct + '%';
+            document.getElementById('sum-a').innerText = aPct + '%';
+            document.getElementById('sum-h').innerText = hPct + '%';
+
+           
+            document.getElementById('quiz-container').style.display = 'none';
+            document.getElementById('main-submit').style.display = 'none';
+            document.getElementById('result').style.display = 'block';
+
+            animateMainCircle(finalUnifiedScore);
+        }
+
+       
+        function animateMainCircle(target) {
+            let curr = 0;
+            let el = document.getElementById('coreScore');
+            let text = document.getElementById('main-percent');
+            let intr = setInterval(() => {
+                if (curr >= target) {
+                    clearInterval(intr);
+                }
+                el.style.setProperty('--percent', curr);
+                text.innerText = curr + '%';
+                if (curr < target) curr++;
+            }, 20);
+        }
+
+        
+        window.onload = initQuiz;
+        document.body.classList.add("loading");
+
+        window.addEventListener("load", () => {
+            setTimeout(() => {
+                const loader = document.getElementById("loader");
+                loader.style.opacity = "0";
+                loader.style.transition = "opacity 0.5s ease";
+
+                setTimeout(() => {
+                    loader.style.display = "none";
+                    document.body.classList.remove("loading");
+                }, 500);
+
+            }, 2000); // 2 seconds
+        });
+    </script>
+</body>
+
+</html>

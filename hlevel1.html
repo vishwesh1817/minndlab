@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindLab - Level 2</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<style>
+    :root {
+        --bg: #0f172a;
+        --primary: #6c63ff;
+        --text-main: #f1f5f9;
+        --card-bg: #ffffff;
+        --mind: #3b82f6;
+        --ego: #ef4444;
+        --attitude: #a855f7;
+        --help: #22c55e;
+    }
+
+    .container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    header {
+        text-align: center;
+        margin-bottom: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .level-tag {
+        background: #ffffff;
+        color: var(--primary);
+        padding: 15px;
+        border-radius: 10px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        border: 1px solid var(--primary);
+    }
+
+    h2 {
+        font-size: 29px;
+        background: linear-gradient(90deg, #38bdf8, #a855f7);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-top: 15px;
+    }
+
+    .question-card {
+        background: white;
+        border-radius: 10px;
+        width: 100%;
+        padding: 20px;
+        border: 1px solid;
+        margin-bottom: 20px;
+        border: 1px solid #e6e7eb;
+        display: flex;
+        align-items: left;
+        justify-content: center;
+        flex-direction: column;
+        animation: slideUp 0.5s ease;
+    }
+
+    .question-card h3 {
+        font-size: 20px;
+        width: 100%;
+        text-align: left;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .options {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    @media (max-width: 600px) {
+        .options {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    label {
+        width: 80%;
+        padding: 14px;
+        border: 1px solid #e6e7eb;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: left;
+        color: #222222;
+        background-color: transparent;
+    }
+
+    label:hover {
+        background: #6c63ff1a;
+        border-color: var(--primary);
+    }
+
+    input[type="radio"] {
+        margin-right: 10px;
+        margin-left: 20px;
+        accent-color: #6c63ff;
+        transition: all 0.3s;
+    }
+
+    label:has(input:checked) {
+        background-color: #ffffff;
+        border: 1px solid #6c63ff;
+        color: #0f172a;
+        font-weight: bold;
+    }
+
+    .submit-btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 250px;
+        height: 50px;
+        max-width: 300px;
+        margin: 40px auto;
+        gap: 10px;
+        background-color: #6c63ff;
+        border-radius: 10px;
+        color: rgb(255, 255, 255);
+        border: 1px solid #e6e7eb;
+        transition: all 0.2s;
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    }
+
+    #result {
+        display: none;
+    
+        text-align: center;
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        width: 90%;
+        animation: slideUp 0.8s ease;
+    }
+
+    .main-result-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+    }
+
+    .core-circle {
+        width: 220px;
+        height: 220px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: conic-gradient(var(--primary) calc(var(--percent) * 1%), #f1f5f9 0);
+        position: relative;
+        transition: --percent 0.5s;
+    }
+
+    .inner-circle {
+        width: 180px;
+        height: 180px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .inner-circle strong {
+        font-size: 40px;
+        color: var(--bg);
+    }
+
+    .inner-circle span {
+        font-size: 14px;
+        color: var(--primary);
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .stats-grid {
+        width: 100%;
+        max-width: 400px;
+        text-align: left;
+    }
+
+    .stat-item {
+        margin-bottom: 15px;
+    }
+
+    .stat-item span {
+        font-size: 12px;
+        font-weight: bold;
+        color: #64748b;
+    }
+
+    .bar-bg {
+        width: 100%;
+        height: 8px;
+        background: #f1f5f9;
+        border-radius: 10px;
+        margin-top: 5px;
+        overflow: hidden;
+    }
+
+    .bar-fill {
+        height: 100%;
+        border-radius: 10px;
+        transition: width 1s ease-out;
+    }
+
+
+    .submit-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 15px 25px rgba(0, 0, 0, 0.137);
+    }
+
+    .stats-summary {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+        margin-top: 20px;
+        font-size: 12px;
+        color: #64748b;
+    }
+
+    .summary-item {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .summary-item strong {
+        color: var(--primary);
+        font-size: 16px;
+    }
+
+    @media screen and (max-width:425px) {
+        .question-card {
+            width: 85%;
+        }
+
+        .question-card h3 {
+            font-size: 14px;
+            font-weight: 100;
+        }
+
+        .options {
+            gap: 0px;
+        }
+
+        label {
+            padding: 0px;
+            border: 1px solid transparent;
+        }
+
+        label:has(input:checked) {
+            border: 1px solid transparent;
+
+        }
+    }
+</style>
+
+<body>
+    <div class="trns">
+        <a href="level1.html">
+            <img src="icone/language-translation-svgrepo-com.svg" alt="">
+        </a>
+    </div>
+    <div class="head">
+        <nav>
+            <div class="logo">
+                <img src="colored-logo.png">
+                <span>MINDLAB</span>
+            </div>
+            <div class="menu">
+                <a href="index.html">HOME</a>
+                <a href="levels.html">LEVELS</a>
+                <a href="motivation.html">MOTIVATION</a>
+                <a href="improve.html">IMPROVE YOURSELF</a>
+                <a href="book.html">BOOKS</a>
+                <a class="bbb" href="levels.html">START<img src="icone/white-roket.svg" width="16px"></a>
+            </div>
+            <button class="menu1" onclick="openNav()"><img src="icone/menu-01-stroke-rounded.svg" width="25px"></button>
+
+            <div id="mySidenav" class="slider">
+                <div class="co">
+                    <button class="closebtn" onclick="closeNav()"><img
+                            src="icone/cancel-01-stroke-rounded.svg"></button>
+                    <div class="ho"></div>
+                    <div class="li">
+                        <a href="index.html"><img src="icone/home-09-stroke-rounded (1).svg" alt="">HOME</a>
+                        <a href="motivation.html"><img src="icone/idea-stroke-rounded (1).svg" alt="">QUOTES</a>
+                        <a class="acti" href="levels.html"><img src="icone/trade-up-stroke-rounded.svg"
+                                alt=""><span>LEVEL</span></a>
+                        <a href="improve.html"><img src="icone/activity-01-stroke-rounded (1).svg" alt="">IMPROVE</a>
+                        <a href="book.html"><img src="icone/book-02-stroke-rounded (1).svg" alt="">BOOK</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div class="main">
+        <div class="container">
+            <header>
+                <span class="level-tag" style="margin-top: 20px;">LEVEL 1 - Simple Questions</span>
+                <h2>Deep dive into your inner subconscious.</h2>
+                <p style="color: #94a3b8;">Level 1 tests your ethics, leadership, and emotional intelligence under
+                    pressure.</p>
+            </header>
+
+            <div id="quiz-container"></div>
+            <button id="main-submit" class="submit-btn" onclick="calculateResult()">Analyze Results</button>
+
+            <div id="result">
+                <h2 style="color: var(--bg); margin-bottom: 10px;">Your Mind Synthesis</h2>
+                <p style="color: #64748b; margin-bottom: 30px;">Analyzing your subconscious patterns...</p>
+
+                <div class="main-result-container">
+                    <div class="core-circle" id="coreScore" style="--percent: 0;">
+                        <div class="inner-circle">
+                            <span id="personality-label" style="letter-spacing: 1px;">Analyzing...</span>
+                            <strong id="main-percent">0%</strong>
+                            <small style="color: #94a3b8; font-size: 10px; margin-top: 5px;">OVERALL SCORE</small>
+                        </div>
+                    </div>
+
+                    <div class="stats-summary"
+                        style="display: flex; justify-content: space-around; width: 100%; margin-top: 20px;">
+                        <div class="summary-item"><span>MIND</span><br><strong id="sum-m"
+                                style="color:var(--mind)">0%</strong></div>
+                        <div class="summary-item"><span>EGO</span><br><strong id="sum-e"
+                                style="color:var(--ego)">0%</strong></div>
+                        <div class="summary-item"><span>ATTITUDE</span><br><strong id="sum-a"
+                                style="color:var(--attitude)">0%</strong></div>
+                        <div class="summary-item"><span>HELP</span><br><strong id="sum-h"
+                                style="color:var(--help)">0%</strong></div>
+                    </div>
+                </div>
+
+                <button class="submit-btn" style="margin-top: 30px;" onclick="location.reload()">Re-Take Test</button>
+            </div>
+        </div>
+    </div>
+    <div class="foot">
+        <div class="footer">
+            <div class="foot-logo">
+                <div class="lo">
+                    <img src="colored-logo.png" width="30px">
+                    MINDLAB
+                </div>
+                <h3>Understand your mind. Improve your life.</h3>
+                <p>MindLab helps you analyze your personality, mindset, ego, and habits through smart questions and
+                    self-growth guidance.</p>
+            </div>
+            <div class="lin">
+                <div class="foot-links">
+                    <h4>Quick Links</h4>
+                    <br>
+                    <a href="index.html">Home</a>
+                    <a href="levels.html">Level</a>
+                    <a href="motivation.html">Motivation</a>
+                    <a href="improve.html">Improve Yourself</a>
+                </div>
+                <div class="foot-features">
+                    <h4>FEATURES</h4>
+                    <br>
+                    <a href="levels.html">Ego Level</a>
+                    <a href="levels.html">Attitude Balance</a>
+                    <a href="levels.html">Sharp Mind</a>
+                    <a href="levels.html">Helpfulness</a>
+                </div>
+            </div>
+        </div>
+        <div class="copy">
+            <div class="dis">
+                <span>This website is created for educational purposes only. The personality results are not medical or
+                    psychological advice.</span>
+            </div>
+            <div class="rights">
+                <span>© 2025 MindLab. All rights reserved.
+                </span>
+            </div>
+        </div>
+    </div>
+    <div id="loader">
+        <div class="loader-box">
+            <div class="ring">
+                <img src="img/maze.gif" width="40px">
+            </div>
+            <div class="bx">
+                <span>MINDLAB</span>
+                <small>Fuel Your Mind</small>
+            </div>
+        </div>
+    </div>
+    <script>
+        function openNav() { document.getElementById("mySidenav").style.width = "120px"; }
+        function closeNav() { document.getElementById("mySidenav").style.width = "0"; }
+
+        const allQuestions = [
+            { q: "Aapke paas power hai ki kisi ek dushman ki sabse badi khushi chinn sakein, kya karenge?", options: [{ t: "Chinn lunga", e: 25 }, { t: "Maaf kar dunga", h: 25 }, { t: "Usey sudharne ka mauka dunga", m: 20 }, { t: "Ignore karunga", a: 20 }] },
+            { q: "Agar aapko pata chale ki aapka pura jeevan ek script hai, aapka reaction?", options: [{ t: "Script badalne ki koshish", m: 25 }, { t: "Gussa aur frustration", e: 20 }, { t: "Shanti se swikar", a: 20 }, { t: "Writer ko dhundunga", h: 10 }] },
+            { q: "Logon ki bheed mein kisi masoom par ilzam lag raha hai, aap akele sach jante hain:", options: [{ t: "Bheed ke khilaf khada hounga", h: 25 }, { t: "Chupchap nikal jaunga", a: 20 }, { t: "Saboot ikhatta karunga", m: 20 }, { t: "Mazaa lunga", e: 20 }] },
+            { q: "Leadership ka matlab aapke liye kya hai?", options: [{ t: "Sab par control", e: 25 }, { t: "Sabka sath, sabka vikas", h: 25 }, { t: "Sirf apna kaam nikalwana", a: 15 }, { t: "Vision dikhana", m: 20 }] },
+            { q: "Aapki sabse badi kamzori koi public mein expose kar de:", options: [{ t: "Usey barbaad kar dunga", e: 25 }, { t: "Galti maan lunga", h: 20 }, { t: "Use mazak mein uda dunga", a: 25 }, { t: "Analyse karunga ki sach hai ya nahi", m: 15 }] },
+            { q: "Success ke liye dosti kurbaan karni pade toh?", options: [{ t: "Dosti pehle hai", h: 25 }, { t: "Success pehle hai", e: 25 }, { t: "Balance banaunga", m: 20 }, { t: "Halat par chhodunga", a: 15 }] },
+            { q: "Koi aapko neecha dikhane ki koshish kare toh?", options: [{ t: "Uski aukaat dikhaunga", e: 25 }, { t: "Uski baton ko ignore", a: 25 }, { t: "Samjhunga wo aisa kyun kar raha hai", m: 20 }, { t: "Dukh hoga", h: 10 }] },
+            { q: "Zindagi mein sabse zaroori kya hai?", options: [{ t: "Self-Respect", a: 25 }, { t: "Kindness", h: 25 }, { t: "Intelligence", m: 25 }, { t: "Dominance", e: 25 }] },
+            { q: "Dhoka milne par aapka agla kadam:", options: [{ t: "Badla", e: 25 }, { t: "Sabaq ", m: 25 }, { t: "Maafi", h: 20 }, { t: "Rishta khatam", a: 20 }] },
+            { q: "Kya aap rules todne mein yakeen rakhte hain?", options: [{ t: "Agar fayda ho toh", e: 20 }, { t: "Kabhi nahi", h: 20 }, { t: "System badalne ke liye", m: 25 }, { t: "Rules mere liye nahi hain", a: 20 }] },
+            { q: "Anjaan shaks mushkil mein hai, par aap late ho rahe hain:", options: [{ t: "Help karunga", h: 25 }, { t: "Nikal jaunga", a: 20 }, { t: "Kisi aur ko bhejunga", m: 15 }, { t: "Uski galti hai", e: 15 }] },
+            { q: "Success milne par credit kise denge?", options: [{ t: "Sirf apni mehnat ko", e: 25 }, { t: "Team aur luck ko", h: 25 }, { t: "Strategical planning ko", m: 20 }, { t: "Kismat ko", a: 15 }] },
+            { q: "Logon ki rai (opinion) aapke liye kitni mayne rakhti hai?", options: [{ t: "Bilkul nahi", a: 25 }, { t: "Bahut zyada", h: 10 }, { t: "Sirf kaam ki baat", m: 25 }, { t: "Gussa aata hai", e: 20 }] },
+            { q: "Hard work ya Smart work?", options: [{ t: "Hard work", h: 15 }, { t: "Smart work", m: 25 }, { t: "Dono ka mix", a: 20 }, { t: "Jo kam mehnat mein ho", e: 20 }] },
+            { q: "Aapko ek secret pata chala jo kisi ki life tabah kar sakta hai:", options: [{ t: "Usey blackmail karunga", e: 25 }, { t: "Chupa kar rakhunga", h: 25 }, { t: "Analyse karunga", m: 20 }, { t: "Bhula dunga", a: 15 }] },
+            { q: "Competition mein dushman jeet raha hai:", options: [{ t: "Appreciate karunga", h: 25 }, { t: "Cheating karunga", e: 25 }, { t: "Agli baar ka plan", m: 20 }, { t: "Field chhod dunga", a: 15 }] },
+            { q: "Stress mein aapka behavior kaisa hota hai?", options: [{ t: "Chidchida", e: 20 }, { t: "Shant aur focused", m: 25 }, { t: "Rona aata hai", h: 15 }, { t: "Akele rehna", a: 20 }] },
+            { q: "Paisa sab kuch hai?", options: [{ t: "Haan, bilkul", e: 25 }, { t: "Nahi, sirf zaroorat hai", h: 25 }, { t: "Ek tool hai", m: 25 }, { t: "Bekaar hai", a: 10 }] },
+            { q: "Apni galti manna aapke liye:", options: [{ t: "Bahut mushkil", e: 25 }, { t: "Asaan hai", h: 25 }, { t: "Logical ho toh manunga", m: 20 }, { t: "Zaroori nahi", a: 15 }] },
+            { q: "Kamyabi ka shortcut mile toh?", options: [{ t: "Lunga", e: 25 }, { t: "Nahi lunga", h: 20 }, { t: "Check karunga risk kitna hai", m: 25 }, { t: "Sahi rasta hi thik hai", a: 15 }] },
+            { q: "Aap 10 ajnabiyon ko bacha sakte hain par kisi apne ki qurbani deni hogi, kya chunenge?", options: [{ t: "10 ajnabiyon ko bachaunga", m: 25 }, { t: "Apne kareebi ko bachaunga", h: 25 }, { t: "Chunne se inkar", a: 20 }, { t: "Jiski value zyada ho", e: 20 }] },
+            { q: "Aapko pata chale ki aapki success ek jhoot par tiki hai jo koi nahi janega:", options: [{ t: "Success enjoy karunga", e: 25 }, { t: "Sab sach bata dunga", h: 25 }, { t: "Is success se bhala karunga", m: 20 }, { t: "Pura waqt pachtawa hoga", a: 15 }] },
+            { q: "Order banaye rakhne ke liye darr (fear) ya pyaar (love) mein se kya chunenge?", options: [{ t: "Darr", e: 25 }, { t: "Pyaar", h: 25 }, { t: "Logic se respect", m: 20 }, { t: "Neutral rahunga", a: 20 }] },
+            { q: "Agar aapko apni maut ki sahi tareekh janne ka mauka mile toh:", options: [{ t: "Janna chahunga", m: 25 }, { t: "Nahi janna chahunga", h: 20 }, { t: "Usey badalne ki koshish", e: 20 }, { t: "Fark nahi padta", a: 25 }] },
+            { q: "Jisne aapki life barbad ki, wo aaj madad ki bheek mang raha hai:", options: [{ t: "Tadapne dunga", e: 25 }, { t: "Bina shart madad", h: 25 }, { t: "Madad ke badle keemat", m: 20 }, { t: "Chupchap chala jaunga", a: 20 }] },
+            { q: "Choti legendary life ya lambi sadharan life?", options: [{ t: "Choti aur legendary", e: 25 }, { t: "Lambi aur sadharan", h: 20 }, { t: "Jo kismat mein ho", a: 25 }, { t: "Impact par depend karega", m: 20 }] },
+            { q: "Ek button dabane se 1 Crore milenge par duniya mein koi anjan marega:", options: [{ t: "Daba dunga", e: 25 }, { t: "Kabhi nahi dabaunga", h: 25 }, { t: "Logic se sochunga", m: 15 }, { t: "Duniya mein bheed waise hi zyada hai", a: 20 }] },
+            { q: "Sabse dardnak yaad mitane ka mauka mile, par uske sath mila sabaq (lesson) bhi mit jayega:", options: [{ t: "Mita dunga", a: 20 }, { t: "Nahi mitaunga", m: 25 }, { t: "Dard accept karunga", h: 20 }, { t: "Badle ki aag banaunga", e: 25 }] },
+            { q: "Jahan sab jhoot bolte hon, kya aap sach ka sath denge chahe aap barbad ho jayein?", options: [{ t: "Hamesha sach", h: 25 }, { t: "Unse behtar jhoot bolunga", e: 25 }, { t: "Sirf safe hone par sach", m: 20 }, { t: "Sabse baat karna band", a: 20 }] },
+            { q: "Absolute power mil rahi hai, par aapko hamesha ke liye akele (isolation) rehna hoga:", options: [{ t: "Power le lunga", e: 25 }, { t: "Rishton ke liye mana karunga", h: 25 }, { t: "Fayde analyse karunga", m: 20 }, { t: "Main pehle se akela hoon", a: 25 }] }
+        ];
+        function initQuiz() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+            
+            const selected = [...allQuestions].sort(() => 0.5 - Math.random()).slice(0, 10);
+
+
+            selected.forEach((item, idx) => {
+                const qCard = document.createElement('div');
+                qCard.className = 'question-card';
+                let ops = [...item.options].sort(() => 0.5 - Math.random());
+                let optionsHtml = ops.map(opt => `
+                    <label><input type="radio" name="q${idx}" 
+                    data-m="${opt.m || 0}" data-e="${opt.e || 0}" data-a="${opt.a || 0}" data-h="${opt.h || 0}">
+                    ${opt.t}</label>`).join('');
+                qCard.innerHTML = `<h3>${idx + 1}. ${item.q}</h3><div class="options">${optionsHtml}</div>`;
+                container.appendChild(qCard);
+            });
+        }
+
+        function calculateResult() {
+            const checked = document.querySelectorAll('input:checked');
+            if (checked.length < 10) return alert("Please answer all questions!");
+
+            let s = { mind: 0, ego: 0, attitude: 0, help: 0 };
+            checked.forEach(o => {
+                s.mind += parseInt(o.dataset.m) || 0;
+                s.ego += parseInt(o.dataset.e) || 0;
+                s.attitude += parseInt(o.dataset.a) || 0;
+                s.help += parseInt(o.dataset.h) || 0;
+            });
+
+            
+            let mPct = Math.min(Math.round((s.mind / 200) * 100), 100);
+            let ePct = Math.min(Math.round((s.ego / 200) * 100), 100);
+            let aPct = Math.min(Math.round((s.attitude / 200) * 100), 100);
+            let hPct = Math.min(Math.round((s.help / 200) * 100), 100);
+
+            
+
+            let balanceScore = (mPct * 0.4) + (aPct * 0.3) + (hPct * 0.3);
+
+            
+            if (ePct > 60) balanceScore -= (ePct - 60);
+            if (ePct < 15) balanceScore -= 10; 
+
+            let finalUnifiedScore = Math.max(5, Math.min(98, Math.round(balanceScore))); 
+
+           
+            let scores = { "MIND": mPct, "EGO": ePct, "ATTITUDE": aPct, "HELP": hPct };
+            let dominant = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+
+            let title = "";
+            let desc = "";
+
+            if (dominant === "EGO" && ePct > 70) {
+                title = "The Commander";
+                desc = "Aap results toh achhe late hain, lekin aapko hamdardi par kaam karne ki zaroorat hai.";
+            } else if (dominant === "MIND") {
+                title = "The Strategist";
+                desc = "Tarkshil aur vishleshnatmak, aap un patterns ko samajhte hain jo baaki log nahi dekh paate.";
+            } else if (dominant === "ATTITUDE") {
+                title = "The Stoic";
+                desc = "Bhavnatmak roop se sthir aur dabav ke waqt majboot rehne wale.";
+            } else if (dominant === "HELP") {
+                title = "The Altruist";
+                desc = "Aapki taqat doosron ka saath dene aur unhe aage badhane mein hai.";
+            } else {
+                title = "The Balanced Soul";
+                desc = "Aapke andar ego aur hamdardi ke beech ek anokha aur behtareen tawazun hai.";
+            }
+
+            
+            document.getElementById('personality-label').innerText = title;
+            document.getElementById('sum-m').innerText = mPct + '%';
+            document.getElementById('sum-e').innerText = ePct + '%';
+            document.getElementById('sum-a').innerText = aPct + '%';
+            document.getElementById('sum-h').innerText = hPct + '%';
+
+           
+            document.getElementById('quiz-container').style.display = 'none';
+            document.getElementById('main-submit').style.display = 'none';
+            document.getElementById('result').style.display = 'block';
+
+            animateMainCircle(finalUnifiedScore);
+        }
+
+        
+        function animateMainCircle(target) {
+            let curr = 0;
+            let el = document.getElementById('coreScore');
+            let text = document.getElementById('main-percent');
+            let intr = setInterval(() => {
+                if (curr >= target) {
+                    clearInterval(intr);
+                }
+                el.style.setProperty('--percent', curr);
+                text.innerText = curr + '%';
+                if (curr < target) curr++;
+            }, 20);
+        }
+
+        
+        window.onload = initQuiz;
+        document.body.classList.add("loading");
+
+        window.addEventListener("load", () => {
+            setTimeout(() => {
+                const loader = document.getElementById("loader");
+                loader.style.opacity = "0";
+                loader.style.transition = "opacity 0.5s ease";
+
+                setTimeout(() => {
+                    loader.style.display = "none";
+                    document.body.classList.remove("loading");
+                }, 500);
+
+            }, 2000); // 2 seconds
+        });
+    </script>
+</body>
+
+</html>

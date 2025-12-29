@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindLab - Helpfullness Test</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<style>
+    :root {
+        --bg: #0f172a;
+        --primary: #6c63ff;
+        --text-main: #f1f5f9;
+        --card-bg: #ffffff;
+        --mind: #3b82f6;
+        --ego: #ef4444;
+        --attitude: #a855f7;
+        --help: #22c55e;
+    }
+
+    .container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    header {
+        text-align: center;
+        margin-bottom: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .level-tag {
+        background: #ffffff;
+        color: var(--primary);
+        padding: 15px;
+        border-radius: 10px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        border: 1px solid var(--primary);
+    }
+
+    h2 {
+        font-size: 29px;
+        background: linear-gradient(90deg, #38bdf8, #a855f7);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-top: 15px;
+    }
+
+    .question-card {
+        background: white;
+        border-radius: 10px;
+        width: 100%;
+        padding: 20px;
+        border: 1px solid;
+        margin-bottom: 20px;
+        border: 1px solid #e6e7eb;
+        display: flex;
+        align-items: left;
+        justify-content: center;
+        flex-direction: column;
+        animation: slideUp 0.5s ease;
+    }
+
+    .question-card h3 {
+        font-size: 20px;
+        width: 100%;
+        text-align: left;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .options {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    @media (max-width: 650px) {
+        .options {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    label {
+        width: 80%;
+        padding: 14px;
+        border: 1px solid #e6e7eb;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: left;
+        color: #222222;
+        background-color: transparent;
+    }
+
+    label:hover {
+        background: #6c63ff1a;
+        border-color: var(--primary);
+    }
+
+    input[type="radio"] {
+        margin-right: 10px;
+        margin-left: 20px;
+        accent-color: #6c63ff;
+        transition: all 0.3s;
+    }
+
+    label:has(input:checked) {
+        background-color: #ffffff;
+        border: 1px solid #6c63ff;
+        color: #0f172a;
+        font-weight: bold;
+    }
+
+    .submit-btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 250px;
+        height: 50px;
+        max-width: 300px;
+        margin: 40px auto;
+        gap: 10px;
+        background-color: #6c63ff;
+        border-radius: 10px;
+        color: rgb(255, 255, 255);
+        border: 1px solid #e6e7eb;
+        transition: all 0.2s;
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 15px 25px rgba(0, 0, 0, 0.137);
+    }
+
+    #result {
+        display: none;
+      
+        text-align: center;
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        width: 90%;
+        animation: slideUp 0.8s ease;
+    }
+
+    .main-result-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+    }
+
+    .core-circle {
+        width: 220px;
+        height: 220px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: conic-gradient(var(--primary) calc(var(--percent) * 1%), #f1f5f9 0);
+        position: relative;
+        transition: --percent 0.5s;
+    }
+
+    .inner-circle {
+        width: 180px;
+        height: 180px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .inner-circle strong {
+        font-size: 40px;
+        color: var(--bg);
+    }
+
+    .inner-circle span {
+        font-size: 14px;
+        color: var(--primary);
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .stats-grid {
+        width: 100%;
+        max-width: 400px;
+        text-align: left;
+    }
+
+    .stat-item {
+        margin-bottom: 15px;
+    }
+
+    .stat-item span {
+        font-size: 12px;
+        font-weight: bold;
+        color: #64748b;
+    }
+
+    .bar-bg {
+        width: 100%;
+        height: 8px;
+        background: #f1f5f9;
+        border-radius: 10px;
+        margin-top: 5px;
+        overflow: hidden;
+    }
+
+    .bar-fill {
+        height: 100%;
+        border-radius: 10px;
+        transition: width 1s ease-out;
+    }
+
+
+    .submit-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 15px 25px rgba(0, 0, 0, 0.137);
+    }
+
+    .stats-summary {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+        margin-top: 20px;
+        font-size: 12px;
+        color: #64748b;
+    }
+
+    .summary-item {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .summary-item strong {
+        color: var(--primary);
+        font-size: 16px;
+    }
+
+    @media screen and (max-width:425px) {
+        .question-card {
+            width: 85%;
+        }
+
+        .question-card h3 {
+            font-size: 14px;
+            font-weight: 100;
+        }
+
+        .options {
+            gap: 0px;
+        }
+
+        label {
+            padding: 0px;
+            border: 1px solid transparent;
+        }
+
+        label:has(input:checked) {
+            border: 1px solid transparent;
+
+        }
+    }
+</style>
+
+<body>
+    <div class="trns">
+        <a href="hhelpfullness.html">
+            <img src="icone/language-translation-svgrepo-com.svg" alt="">
+        </a>
+    </div>
+    <div class="head">
+        <nav>
+            <div class="logo">
+                <img src="colored-logo.png">
+                <span>MINDLAB</span>
+            </div>
+            <div class="menu">
+                <a href="index.html">HOME</a>
+                <a href="levels.html">LEVELS</a>
+                <a href="motivation.html">MOTIVATION</a>
+                <a href="improve.html">IMPROVE YOURSELF</a>
+                <a href="book.html">BOOKS</a>
+                <a class="bbb" href="levels.html">START<img src="icone/white-roket.svg" width="16px"></a>
+            </div>
+            <button class="menu1" onclick="openNav()"><img src="icone/menu-01-stroke-rounded.svg" width="25px"></button>
+
+            <div id="mySidenav" class="slider">
+                <div class="co">
+                    <button class="closebtn" onclick="closeNav()"><img
+                            src="icone/cancel-01-stroke-rounded.svg"></button>
+                    <div class="ho"></div>
+                    <div class="li">
+                        <a href="index.html"><img src="icone/home-09-stroke-rounded (1).svg" alt="">HOME</a>
+                        <a href="motivation.html"><img src="icone/idea-stroke-rounded (1).svg" alt="">QUOTES</a>
+                        <a class="acti" href="levels.html"><img src="icone/trade-up-stroke-rounded.svg"
+                                alt=""><span>LEVEL</span></a>
+                        <a href="improve.html"><img src="icone/activity-01-stroke-rounded (1).svg" alt="">IMPROVE</a>
+                        <a href="book.html"><img src="icone/book-02-stroke-rounded (1).svg" alt="">BOOK</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div class="main">
+        <div class="container">
+            <header>
+                <span class="level-tag" style="margin-top: 20px;">
+                    LEVEL: HELPFULNESS & EMPATHY
+                </span>
+                <h2>Humanity & Kindness Test</h2>
+                <p style="color: #94a3b8;">Yeh test check karega ki aap musibat mein dusron ke liye kitne khade hote
+                    hain.</p>
+            </header>
+
+            <div id="quiz-container"></div>
+
+            <button id="main-submit" class="submit-btn" onclick="calculateResult()">Check My Kindness Level</button>
+
+            <div id="result">
+                <h2 style="color: var(--bg); margin-bottom: 10px;">Empathy Analysis Report</h2>
+                <div class="main-result-container">
+                    <div class="core-circle" id="coreScore" style="--percent: 0;">
+                        <div class="inner-circle">
+                            <span id="personality-label" style="letter-spacing: 1px;">Calculating...</span>
+                            <strong id="main-percent">0%</strong>
+                            <small style="color: #94a3b8; font-size: 10px; margin-top: 5px;">HELPFULNESS
+                                SCORE</small>
+                        </div>
+                    </div>
+
+                    <div id="ego-description"
+                        style="color: #64748b; font-size: 14px; padding: 0 20px; line-height: 1.5;">
+                    </div>
+                </div>
+
+                <button class="submit-btn" style="margin-top: 30px;" onclick="location.reload()">Retake Test</button>
+            </div>
+        </div>
+    </div>
+    <div class="foot">
+        <div class="footer">
+            <div class="foot-logo">
+                <div class="lo">
+                    <img src="colored-logo.png" width="30px">
+                    MINDLAB
+                </div>
+                <h3>Understand your mind. Improve your life.</h3>
+                <p>MindLab helps you analyze your personality, mindset, ego, and habits through smart questions and
+                    self-growth guidance.</p>
+            </div>
+            <div class="lin">
+                <div class="foot-links">
+                    <h4>Quick Links</h4>
+                    <br>
+                    <a href="index.html">Home</a>
+                    <a href="levels.html">Level</a>
+                    <a href="motivation.html">Motivation</a>
+                    <a href="improve.html">Improve Yourself</a>
+                </div>
+                <div class="foot-features">
+                    <h4>FEATURES</h4>
+                    <br>
+                    <a href="levels.html">Ego Level</a>
+                    <a href="levels.html">Attitude Balance</a>
+                    <a href="levels.html">Sharp Mind</a>
+                    <a href="levels.html">Helpfulness</a>
+                </div>
+            </div>
+        </div>
+        <div class="copy">
+            <div class="dis">
+                <span>This website is created for educational purposes only. The personality results are not medical or
+                    psychological advice.</span>
+            </div>
+            <div class="rights">
+                <span>© 2025 MindLab. All rights reserved.
+                </span>
+            </div>
+        </div>
+    </div>
+    <div id="loader">
+        <div class="loader-box">
+            <div class="ring">
+                <img src="img/maze.gif" width="40px">
+            </div>
+            <div class="bx">
+                <span>MINDLAB</span>
+                <small>Fuel Your Mind</small>
+            </div>
+        </div>
+    </div>
+    <script>
+        function openNav() { document.getElementById("mySidenav").style.width = "120px"; }
+        function closeNav() { document.getElementById("mySidenav").style.width = "0"; }
+
+        
+const helpfulnessQuestions = [
+    
+    { q: "Your career interview is in 10 minutes, and on the way, you find an abandoned child crying who has lost their way. What will you do?", options: [{ t: "I will call the police and leave for the interview", s: 10 }, { t: "I will skip the interview and take the child to a safe place", s: 25 }, { t: "I will ignore it because my career comes first", s: 0 }, { t: "I will ask someone else to take care of the child and leave", s: 15 }] },
+    
+    { q: "You have saved money for a dream vacation, but then a distant relative needs money for emergency surgery.", options: [{ t: "I will give half the money and make the vacation cheaper", s: 15 }, { t: "I will advise them to take a loan", s: 5 }, { t: "I will not change my plans", s: 0 }, { t: "I will cancel the vacation and give them all the money", s: 25 }] },
+    
+    { q: "You have only one roti (bread) and you have been hungry for two days. Another hungry person asks you for that bread.", options: [{ t: "I will share half the bread", s: 20 }, { t: "I will give them the whole bread", s: 25 }, { t: "I will refuse and eat it myself", s: 0 }, { t: "I will tell them to find food somewhere else", s: 5 }] },
+    
+    { q: "At 2 AM, you hear crying sounds from a neighbor's house, but you are feeling slightly unwell yourself.", options: [{ t: "I will go immediately to check and help", s: 25 }, { t: "I will make an excuse of my health and go to sleep", s: 0 }, { t: "I will send a cousin or someone else", s: 15 }, { t: "I will wait until morning", s: 10 }] },
+
+    
+    { q: "In a crowded place, someone's wallet fell. You saw it but no one else did. Your action?", options: [{ t: "I will pick up the wallet and leave it there", s: 5 }, { t: "I will try to shout and tell them", s: 15 }, { t: "I will push through the crowd and return the wallet to them", s: 25 }, { t: "I will keep the wallet", s: 0 }] },
+    
+    { q: "A physically challenged person is standing on the bus, but you are very tired yourself. Will you give up your seat?", options: [{ t: "I will pretend to sleep", s: 0 }, { t: "I will give the seat immediately without thinking", s: 25 }, { t: "I will tell them to ask someone else for a seat", s: 5 }, { t: "I will give it after a while if no one else does", s: 15 }] },
+    
+    { q: "Your colleague made a mistake for which they might be punished. Will you share the responsibility?", options: [{ t: "I will quietly fix their file", s: 20 }, { t: "I will leave them to their fate", s: 0 }, { t: "Yes, I will say that it was partly my fault too", s: 25 }, { t: "I will tell them to speak the truth themselves", s: 10 }] },
+    
+    { q: "Your junior is slow at work and your own target is pending. Will you teach them?", options: [{ t: "I will guide them by doing overtime", s: 20 }, { t: "I will focus on my own target", s: 0 }, { t: "I will tell them to watch some YouTube video", s: 10 }, { t: "I will stop my work and teach them in detail", s: 25 }] },
+    
+    { q: "A poor person stole medicine because they had no money. You saw it. What will you do?", options: [{ t: "I will pay the shopkeeper so they don't get punished", s: 25 }, { t: "I will call the police", s: 0 }, { t: "I will ignore it", s: 5 }, { t: "I will explain it to them and buy it for them myself", s: 20 }] },
+    
+    { q: "An injured dog is in the middle of the road and traffic is fast. What will you do?", options: [{ t: "I will call an NGO and wait there", s: 20 }, { t: "I will go ahead and tell someone", s: 10 }, { t: "I will take the risk to move it and take it to a doctor", s: 25 }, { t: "I will leave it to die", s: 0 }] },
+
+    
+    { q: "Your enemy is in trouble and only you can save their life. Your decision?", options: [{ t: "I will watch them suffer", s: 0 }, { t: "I will forget the old enmity and save them immediately", s: 25 }, { t: "I will save them but show off the favor", s: 15 }, { t: "I will send someone else", s: 10 }] },
+    
+    { q: "You have only one umbrella and it is raining very hard. A stranger is getting drenched.", options: [{ t: "I will leave alone", s: 0 }, { t: "We will both share it together", s: 20 }, { t: "I will give them the umbrella and get wet myself", s: 25 }, { t: "I will offer them a lift", s: 10 }] },
+    
+    { q: "An unknown elderly person has lost their way; it will take 2 hours to drop them off. Your weekend is starting.", options: [{ t: "I will happily drop them home", s: 25 }, { t: "I will call the police", s: 15 }, { t: "I will tell them the way and leave", s: 5 }, { t: "I will arrange a taxi and pay the driver", s: 20 }] },
+    
+    { q: "You won the lottery. How much portion will you give in donation?", options: [{ t: "Only a little bit", s: 5 }, { t: "50% or more", s: 25 }, { t: "Not at all", s: 0 }, { t: "10% to 20%", s: 15 }] },
+    
+    { q: "A friend has had a breakup and wants to cry all night, but you have to wake up early.", options: [{ t: "I will listen to them all night", s: 25 }, { t: "I will put the phone on silent", s: 0 }, { t: "I will tell them 'let's talk tomorrow'", s: 5 }, { t: "I will talk for 1-2 hours and then go to sleep", s: 15 }] },
+    
+    { q: "There is an accident on the road and people are making videos. What will you do?", options: [{ t: "I will only call the ambulance", s: 10 }, { t: "I will move the video makers aside and help the injured", s: 25 }, { t: "I will see the crowd and leave", s: 0 }, { t: "I will call the ambulance and wait there", s: 20 }] },
+    
+    { q: "Everyone in the office is making fun of a new employee. Your stand?", options: [{ t: "I will stop them and support the new employee", s: 25 }, { t: "I will stay quiet", s: 5 }, { t: "I will quietly befriend the new employee", s: 15 }, { t: "I will also join in the mockery", s: 0 }] },
+    
+    { q: "You are afraid of needles, but someone urgently needs blood. What will you do?", options: [{ t: "I will think about it next time", s: 10 }, { t: "I will refuse", s: 0 }, { t: "I will forget my fear and donate blood", s: 25 }, { t: "I will convince someone else", s: 5 }] },
+    
+    { q: "A waiter accidentally spilled juice on your clothes. Your reaction?", options: [{ t: "I will complain to the manager", s: 0 }, { t: "I will look at them with anger", s: 5 }, { t: "I will tell them 'it's okay' and also give a tip", s: 25 }, { t: "I will just say 'no problem'", s: 15 }] },
+    
+    { q: "Have you ever helped a stranger in a big way without any personal motive?", options: [{ t: "No, didn't get the chance", s: 5 }, { t: "Yes, many times", s: 25 }, { t: "Once or twice", s: 15 }, { t: "Didn't feel the need", s: 0 }] },
+    
+    { q: "Someone's bicycle chain has come off and you know how to fix it.", options: [{ t: "I will see and leave", s: 0 }, { t: "I will ask 'need help?'", s: 15 }, { t: "I will stop and put the chain back on", s: 25 }, { t: "I will smile and leave", s: 5 }] },
+    
+    { q: "A child is throwing litter on the road. What will you do?", options: [{ t: "I will pick up the litter and explain kindly", s: 25 }, { t: "I will scold them", s: 5 }, { t: "I will just watch", s: 0 }, { t: "I will leave the litter there", s: 2 }] },
+    
+    { q: "Your phone is on low battery and a stranger needs to make an emergency call.", options: [{ t: "I will say there is no battery", s: 5 }, { t: "I will give it for only 1 minute", s: 15 }, { t: "Yes, even if my phone turns off", s: 25 }, { t: "I will refuse", s: 0 }] },
+    
+    { q: "The house maid is sick, but today there is a lot of work.", options: [{ t: "I will give her leave and not deduct money", s: 25 }, { t: "I will give her medicine and tell her to work", s: 0 }, { t: "I will give her leave but deduct money", s: 5 }, { t: "I will give her leave but double work tomorrow", s: 10 }] },
+    
+    { q: "Someone is asking for directions very desperately, and you know the way.", options: [{ t: "I will just gesture", s: 5 }, { t: "I will explain the way properly", s: 15 }, { t: "I will drop them off there", s: 25 }, { t: "I will say 'I don't know'", s: 0 }] },
+    
+    { q: "You have old clothes that are in good condition.", options: [{ t: "I will sell them", s: 0 }, { t: "I will find someone in need and give them", s: 25 }, { t: "I will let them stay kept away", s: 2 }, { t: "I will leave them near the dustbin", s: 5 }] },
+    
+    { q: "You are standing in a line and a pregnant woman is standing behind you.", options: [{ t: "I will talk to the manager about a separate line", s: 15 }, { t: "I will give her my place", s: 25 }, { t: "I will ignore it", s: 0 }, { t: "I will let her stay behind", s: 2 }] },
+    
+    { q: "Have you ever forgotten an enmity and forgiven someone?", options: [{ t: "Yes, but didn't keep a relationship", s: 15 }, { t: "No, never", s: 0 }, { t: "Yes, I forgave from the heart", s: 25 }, { t: "I thought about taking revenge", s: 2 }] },
+    
+    { q: "A small plant is wilting in the sun. There is only a little drinking water nearby.", options: [{ t: "I will drink the water myself", s: 0 }, { t: "I will give the water to the plant", s: 25 }, { t: "I will place the plant in the shade", s: 10 }, { t: "I will give half the water", s: 15 }] },
+    
+    { q: "Someone is asking for help on social media whom you don't know.", options: [{ t: "I will provide financial help if it's verified", s: 25 }, { t: "I will ignore it", s: 0 }, { t: "I will write prayers", s: 5 }, { t: "I will just share the post", s: 15 }] }
+];
+        function initQuiz() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+            
+            const selected = [...helpfulnessQuestions].sort(() => 0.5 - Math.random()).slice(0, 10);
+
+            selected.forEach((item, idx) => {
+                const qCard = document.createElement('div');
+                qCard.className = 'question-card';
+                let ops = [...item.options].sort(() => 0.5 - Math.random());
+                let optionsHtml = ops.map(opt => `
+            <label>
+                <input type="radio" name="q${idx}" data-s="${opt.s}">
+                ${opt.t}
+            </label>
+        `).join('');
+
+                qCard.innerHTML = `<h3>${idx + 1}. ${item.q}</h3><div class="options">${optionsHtml}</div>`;
+                container.appendChild(qCard);
+            });
+        }
+        function calculateResult() {
+            const checked = document.querySelectorAll('input:checked');
+            if (checked.length < 10) return alert("Please answer all questions!");
+
+            let totalScore = 0;
+            checked.forEach(o => totalScore += parseInt(o.dataset.s));
+
+            
+            let scorePct = Math.round((totalScore / 250) * 100);
+
+            let label = "";
+            let desc = "";
+
+            if (scorePct > 85) {
+                label = "Angel on Earth";
+                desc = "You are like an angel! Seeing your selfless nature, it feels like the world is running because of people like you.";
+            } else if (scorePct > 60) {
+                label = "Kind Human";
+                desc = "You are a good human being. You understand the pain of others and help as much as possible.";
+            } else if (scorePct > 35) {
+                label = "Practical Person";
+                desc = "You help only when you feel that you are safe. If you open your heart a little more, you will find peace.";
+            } else {
+                label = "Self-Centered";
+                desc = "Currently, your focus is only on yourself. Helping others can give you a new kind of happiness; give it a try.";
+            }
+
+            document.getElementById('personality-label').innerText = label;
+            document.getElementById('ego-description').innerText = desc;
+            document.getElementById('quiz-container').style.display = 'none';
+            document.getElementById('main-submit').style.display = 'none';
+            document.getElementById('result').style.display = 'block';
+
+            animateMainCircle(scorePct);
+        }
+
+        function animateMainCircle(target) {
+            let curr = 0;
+            let el = document.getElementById('coreScore');
+            let text = document.getElementById('main-percent');
+            let intr = setInterval(() => {
+                if (curr >= target) clearInterval(intr);
+                el.style.setProperty('--percent', curr);
+                text.innerText = curr + '%';
+                if (curr < target) curr++;
+            }, 20);
+        }
+
+        window.onload = initQuiz;
+
+        window.addEventListener("load", () => {
+            setTimeout(() => {
+                const loader = document.getElementById("loader");
+                loader.style.opacity = "0";
+                loader.style.transition = "opacity 0.5s ease";
+                setTimeout(() => {
+                    loader.style.display = "none";
+                }, 500);
+            }, 2000);
+        });
+    </script>
+</body>
+
+</html>

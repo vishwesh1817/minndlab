@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindLab - Sharp Mind Test</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<style>
+    .correct {
+        border: 2px solid #22c55e !important;
+        background: #22c55e1a;
+        color: #065f46;
+        font-weight: bold;
+    }
+
+    .wrong {
+        border: 2px solid #ef4444 !important;
+        background: #ef44441a;
+        color: #7f1d1d;
+    }
+
+    :root {
+        --bg: #0f172a;
+        --primary: #6c63ff;
+        --text-main: #f1f5f9;
+        --card-bg: #ffffff;
+        --mind: #3b82f6;
+        --ego: #ef4444;
+        --attitude: #a855f7;
+        --help: #22c55e;
+    }
+
+    .container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    header {
+        text-align: center;
+        margin-bottom: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .level-tag {
+        background: #ffffff;
+        color: var(--primary);
+        padding: 15px;
+        border-radius: 10px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        border: 1px solid var(--primary);
+    }
+
+    h2 {
+        font-size: 29px;
+        background: linear-gradient(90deg, #38bdf8, #a855f7);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-top: 15px;
+    }
+
+    .question-card {
+        background: white;
+        border-radius: 10px;
+        width: 100%;
+        padding: 20px;
+        border: 1px solid;
+        margin-bottom: 20px;
+        border: 1px solid #e6e7eb;
+        display: flex;
+        align-items: left;
+        justify-content: center;
+        flex-direction: column;
+        animation: slideUp 0.5s ease;
+    }
+
+    .question-card h3 {
+        font-size: 20px;
+        width: 100%;
+        text-align: left;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .options {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    @media (max-width: 650px) {
+        .options {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    label {
+        width: 80%;
+        padding: 14px;
+        border: 1px solid #e6e7eb;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: left;
+        color: #222222;
+        background-color: transparent;
+    }
+
+    label:hover {
+        background: #6c63ff1a;
+        border-color: var(--primary);
+    }
+
+    input[type="radio"] {
+        margin-right: 10px;
+        margin-left: 20px;
+        accent-color: #6c63ff;
+        transition: all 0.3s;
+    }
+
+    label:has(input:checked) {
+        background-color: #ffffff;
+        border: 1px solid #6c63ff;
+        color: #0f172a;
+        font-weight: bold;
+    }
+
+    .submit-btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 250px;
+        height: 50px;
+        max-width: 300px;
+        margin: 40px auto;
+        gap: 10px;
+        background-color: #6c63ff;
+        border-radius: 10px;
+        color: rgb(255, 255, 255);
+        border: 1px solid #e6e7eb;
+        transition: all 0.2s;
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 15px 25px rgba(0, 0, 0, 0.137);
+    }
+
+    #result {
+        display: none;
+        text-align: center;
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        width: 90%;
+        animation: slideUp 0.8s ease;
+    }
+
+    .main-result-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+    }
+
+    .core-circle {
+        width: 220px;
+        height: 220px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: conic-gradient(var(--primary) calc(var(--percent) * 1%), #f1f5f9 0);
+        position: relative;
+        transition: --percent 0.5s;
+    }
+
+    .inner-circle {
+        width: 180px;
+        height: 180px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .inner-circle strong {
+        font-size: 40px;
+        color: var(--bg);
+    }
+
+    .inner-circle span {
+        font-size: 14px;
+        color: var(--primary);
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .stats-grid {
+        width: 100%;
+        max-width: 400px;
+        text-align: left;
+    }
+
+    .stat-item {
+        margin-bottom: 15px;
+    }
+
+    .stat-item span {
+        font-size: 12px;
+        font-weight: bold;
+        color: #64748b;
+    }
+
+    .bar-bg {
+        width: 100%;
+        height: 8px;
+        background: #f1f5f9;
+        border-radius: 10px;
+        margin-top: 5px;
+        overflow: hidden;
+    }
+
+    .bar-fill {
+        height: 100%;
+        border-radius: 10px;
+        transition: width 1s ease-out;
+    }
+
+
+    .submit-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 15px 25px rgba(0, 0, 0, 0.137);
+    }
+
+    .stats-summary {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+        margin-top: 20px;
+        font-size: 12px;
+        color: #64748b;
+    }
+
+    .summary-item {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .summary-item strong {
+        color: var(--primary);
+        font-size: 16px;
+    }
+
+    @media screen and (max-width:425px) {
+        .question-card {
+            width: 85%;
+        }
+
+        .question-card h3 {
+            font-size: 14px;
+            font-weight: 100;
+        }
+
+        .options {
+            gap: 0px;
+        }
+
+        label {
+            padding: 0px;
+            border: 1px solid transparent;
+        }
+
+        label:has(input:checked) {
+            border: 1px solid transparent;
+
+        }
+    }
+</style>
+
+<body>
+    <div class="trns">
+        <a href="hmindlevel.html">
+            <img src="icone/language-translation-svgrepo-com.svg" alt="">
+        </a>
+    </div>
+    <div class="head">
+        <nav>
+            <div class="logo">
+                <img src="colored-logo.png">
+                <span>MINDLAB</span>
+            </div>
+            <div class="menu">
+                <a href="index.html">HOME</a>
+                <a href="levels.html">LEVELS</a>
+                <a href="motivation.html">MOTIVATION</a>
+                <a href="improve.html">IMPROVE YOURSELF</a>
+                <a href="book.html">BOOKS</a>
+                <a class="bbb" href="levels.html">START<img src="icone/white-roket.svg" width="16px"></a>
+            </div>
+            <button class="menu1" onclick="openNav()"><img src="icone/menu-01-stroke-rounded.svg" width="25px"></button>
+
+            <div id="mySidenav" class="slider">
+                <div class="co">
+                    <button class="closebtn" onclick="closeNav()"><img
+                            src="icone/cancel-01-stroke-rounded.svg"></button>
+                    <div class="ho"></div>
+                    <div class="li">
+                        <a href="index.html"><img src="icone/home-09-stroke-rounded (1).svg" alt="">HOME</a>
+                        <a href="motivation.html"><img src="icone/idea-stroke-rounded (1).svg" alt="">QUOTES</a>
+                        <a class="acti" href="levels.html"><img src="icone/trade-up-stroke-rounded.svg"
+                                alt=""><span>LEVEL</span></a>
+                        <a href="improve.html"><img src="icone/activity-01-stroke-rounded (1).svg" alt="">IMPROVE</a>
+                        <a href="book.html"><img src="icone/book-02-stroke-rounded (1).svg" alt="">BOOK</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div class="main">
+        <div class="container">
+            <header>
+                <span class="level-tag" style="margin-top: 20px;">LEVEL:
+                    SHARP MIND</span>
+                <h2>Test Your IQ & Logic</h2>
+                <p style="color: #94a3b8;">Yeh test aapki problem-solving aur mental speed ko check karega.</p>
+            </header>
+
+            <div id="quiz-container"></div>
+            <button id="main-submit" class="submit-btn" onclick="calculateResult()">Check My Sharpness</button>
+
+            <div id="result">
+                <h2 style="color: var(--bg); margin-bottom: 10px;">Mind Sharpness Report</h2>
+                <div class="main-result-container">
+                    <div class="core-circle" id="coreScore" style="--percent: 0;">
+                        <div class="inner-circle">
+                            <span id="personality-label" style="letter-spacing: 1px;">Calculating...</span>
+                            <strong id="main-percent">0%</strong>
+                            <small style="color: #94a3b8; font-size: 10px; margin-top: 5px;">MIND POWER SCORE</small>
+                        </div>
+                    </div>
+
+                    <div id="ego-description"
+                        style="color: #64748b; font-size: 14px; padding: 0 20px; line-height: 1.5;">
+                    </div>
+                </div>
+
+                <button class="submit-btn" style="margin-top: 30px;" onclick="location.reload()">Try Again</button>
+            </div>
+        </div>
+    </div>
+    <div class="foot">
+        <div class="footer">
+            <div class="foot-logo">
+                <div class="lo">
+                    <img src="colored-logo.png" width="30px">
+                    MINDLAB
+                </div>
+                <h3>Understand your mind. Improve your life.</h3>
+                <p>MindLab helps you analyze your personality, mindset, ego, and habits through smart questions and
+                    self-growth guidance.</p>
+            </div>
+            <div class="lin">
+                <div class="foot-links">
+                    <h4>Quick Links</h4>
+                    <br>
+                    <a href="index.html">Home</a>
+                    <a href="levels.html">Level</a>
+                    <a href="motivation.html">Motivation</a>
+                    <a href="improve.html">Improve Yourself</a>
+                </div>
+                <div class="foot-features">
+                    <h4>FEATURES</h4>
+                    <br>
+                    <a href="levels.html">Ego Level</a>
+                    <a href="levels.html">Attitude Balance</a>
+                    <a href="levels.html">Sharp Mind</a>
+                    <a href="levels.html">Helpfulness</a>
+                </div>
+            </div>
+        </div>
+        <div class="copy">
+            <div class="dis">
+                <span>This website is created for educational purposes only. The personality results are not medical or
+                    psychological advice.</span>
+            </div>
+            <div class="rights">
+                <span>© 2025 MindLab. All rights reserved.
+                </span>
+            </div>
+        </div>
+    </div>
+    <div id="loader">
+        <div class="loader-box">
+            <div class="ring">
+                <img src="img/maze.gif" width="40px">
+            </div>
+            <div class="bx">
+                <span>MINDLAB</span>
+                <small>Fuel Your Mind</small>
+            </div>
+        </div>
+    </div>
+    <script>
+        function openNav() { document.getElementById("mySidenav").style.width = "120px"; }
+        function closeNav() { document.getElementById("mySidenav").style.width = "0"; }
+
+
+        const sharpMindQuestions = [
+            { q: "A man dressed in all black, including a mask and gloves, is walking down a street where all lamps are off. A black car with no headlights swerves to avoid him. How did the driver see him?", options: [{ t: "He wore a reflective vest", s: 0 }, { t: "The car had sensors", s: 0 }, { t: "It was daytime", s: 25 }, { t: "There was a street light", s: 0 }] },
+
+            { q: "You have 9 identical-looking balls. 8 weigh the same, 1 is lighter. Using a balance scale only twice, how do you find the light one?", options: [{ t: "Split them 4-4", s: 0 }, { t: "Group them in 3s", s: 25 }, { t: "Weight them 2-2-2-3", s: 10 }, { t: "It is impossible", s: 0 }] },
+
+            { q: "There are 3 light bulbs in a room and 3 switches outside. You can only enter the room once. How do you identify which switch belongs to which bulb?", options: [{ t: "Listen to the switch sound", s: 0 }, { t: "Look under the door", s: 0 }, { t: "Check the temperature of bulbs", s: 25 }, { t: "By random guessing", s: 0 }] },
+
+            { q: "You are stuck in quicksand and holding a heavy iron rod. What should you do to stay afloat?", options: [{ t: "Hold the rod horizontally", s: 25 }, { t: "Throw the rod away", s: 0 }, { t: "Stand on the rod", s: 0 }, { t: "Jump repeatedly", s: 0 }] },
+
+            { q: "If 4 + 4 = 20, 5 + 5 = 30, 6 + 6 = 42, then 9 + 9 = ?", options: [{ t: "81", s: 0 }, { t: "110", s: 0 }, { t: "90", s: 25 }, { t: "72", s: 5 }] },
+
+            { q: "A plane crashes and 'every single person' dies. However, 2 people survived. How?", options: [{ t: "They were outside the plane", s: 0 }, { t: "They were married", s: 25 }, { t: "They were the pilots", s: 0 }, { t: "They were children", s: 0 }] },
+
+            { q: "You are given 3 pills and told to take one every half hour. How long will it take to finish them?", options: [{ t: "90 minutes", s: 0 }, { t: "120 minutes", s: 0 }, { t: "60 minutes", s: 25 }, { t: "30 minutes", s: 0 }] },
+
+            { q: "A murderer is sentenced to death and must choose between 3 rooms. 1: Raging fire, 2: Assassins with guns, 3: Lions that haven't eaten in a year. Which is safest?", options: [{ t: "Room 1", s: 0 }, { t: "None of them", s: 0 }, { t: "Room 3", s: 25 }, { t: "Room 2", s: 0 }] },
+
+            { q: "What is 2kg when raw, 1kg when wet, and 3kg when burnt?", options: [{ t: "Ice", s: 0 }, { t: "Sulphur", s: 25 }, { t: "Iron", s: 0 }, { t: "Coal", s: 0 }] },
+
+            { q: "A doctor gives you 3 injections and tells you to take one every hour. How many hours will it take to finish all?", options: [{ t: "3 hours", s: 0 }, { t: "2 hours", s: 25 }, { t: "1 hour", s: 0 }, { t: "Zero", s: 0 }] },
+
+            { q: "Complete the sequence: 1, 11, 21, 1211, 111221, ?", options: [{ t: "111111", s: 0 }, { t: "312211", s: 25 }, { t: "222111", s: 0 }, { t: "123456", s: 0 }] },
+
+            { q: "A spoonful of wine is put in water, then a spoonful of the mixture is put back in the wine. Which glass is more impure?", options: [{ t: "The water glass", s: 0 }, { t: "The wine glass", s: 0 }, { t: "Both are equal", s: 25 }, { t: "Cannot be determined", s: 0 }] },
+
+            { q: "Which word contains all 5 vowels (A, E, I, O, U) in their alphabetical order?", options: [{ t: "Education", s: 5 }, { t: "Abstemious", s: 25 }, { t: "Queue", s: 0 }, { t: "Facetious", s: 25 }] },
+
+            { q: "In a dark room, you have 52 black socks and 52 white socks. What is the minimum number you must pick to ensure a pair?", options: [{ t: "53", s: 0 }, { t: "2", s: 0 }, { t: "3", s: 25 }, { t: "52", s: 0 }] },
+
+            { q: "A man was born in 1930 and died in 1930, yet he was 20 years old. How?", options: [{ t: "Time travel", s: 0 }, { t: "1930 was a room number", s: 25 }, { t: "Incorrect records", s: 0 }, { t: "Different calendar", s: 0 }] },
+
+            { q: "You overtake the person in 2nd last place in a race. What position are you in now?", options: [{ t: "Last", s: 0 }, { t: "3rd last", s: 10 }, { t: "2nd last", s: 25 }, { t: "1st", s: 0 }] },
+
+            { q: "A dog is tied to a 10ft rope. A bone is 15ft away. How does the dog reach the bone?", options: [{ t: "The rope is elastic", s: 0 }, { t: "The rope isn't tied to anything", s: 25 }, { t: "The dog jumps", s: 0 }, { t: "The bone moves", s: 0 }] },
+
+            { q: "Missing number in sequence: 16, 06, 68, 88, ?, 98", options: [{ t: "78", s: 0 }, { t: "L8", s: 25 }, { t: "90", s: 0 }, { t: "89", s: 0 }] },
+
+            { q: "A boat capsizes with 10 people, but not a single hair on anyone's head got wet. Why?", options: [{ t: "They wore raincoats", s: 0 }, { t: "There was no water", s: 0 }, { t: "They were all bald", s: 25 }, { t: "The boat was large", s: 0 }] },
+
+            { q: "If 1=5, 2=25, 3=325, 4=4325, then 5=?", options: [{ t: "54325", s: 0 }, { t: "25", s: 0 }, { t: "1", s: 25 }, { t: "625", s: 0 }] },
+
+            { q: "What walks on 4 legs in the morning, 2 legs at noon, and 3 legs in the evening?", options: [{ t: "An Animal", s: 0 }, { t: "A Human", s: 25 }, { t: "An Alien", s: 0 }, { t: "A Robot", s: 0 }] },
+
+            { q: "A 1kg iron block sinks, but a 1000kg ship floats. Why?", options: [{ t: "The ship is empty", s: 0 }, { t: "Salt water", s: 0 }, { t: "Displacement", s: 25 }, { t: "Engine power", s: 0 }] },
+
+            { q: "Out of 7 burning candles, 3 were blown out. How many are left at the end?", options: [{ t: "7", s: 0 }, { t: "4", s: 0 }, { t: "3", s: 25 }, { t: "0", s: 0 }] },
+
+            { q: "What was made by God in the front and by Man in the back?", options: [{ t: "A Bus", s: 0 }, { t: "A Bull-Cart", s: 25 }, { t: "The World", s: 0 }, { t: "A Computer", s: 0 }] },
+
+            { q: "A man buys an item for $5 and sells it for $4, yet becomes a millionaire. How?", options: [{ t: "He was a thief", s: 0 }, { t: "High investment", s: 0 }, { t: "He was a Diamond merchant", s: 25 }, { t: "It's impossible", s: 0 }] },
+
+            { q: "If a tortoise is moving South, which way is its head facing?", options: [{ t: "South", s: 0 }, { t: "North", s: 0 }, { t: "Inside its shell", s: 25 }, { t: "Downward", s: 0 }] },
+
+            { q: "Sequence: J, F, M, A, M, J, J, A, S, O, N, ?", options: [{ t: "P", s: 0 }, { t: "D", s: 25 }, { t: "M", s: 0 }, { t: "L", s: 0 }] },
+
+            { q: "A man walks in the rain without an umbrella or hat, but not a single hair gets wet. Why?", options: [{ t: "It was light rain", s: 0 }, { t: "He was bald", s: 25 }, { t: "He was under a tree", s: 0 }, { t: "He was indoors", s: 0 }] },
+
+            { q: "What always comes down but never goes up?", options: [{ t: "Money", s: 0 }, { t: "Age", s: 0 }, { t: "Rain", s: 25 }, { t: "A Balloon", s: 0 }] },
+
+            { q: "To find the right path from two guards (one liar, one truthful), what single question do you ask?", options: [{ t: "Are you truthful?", s: 0 }, { t: "What would the other guard say?", s: 25 }, { t: "Which way is life?", s: 0 }, { t: "Who am I?", s: 0 }] }
+        ];
+
+        function initQuiz() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+            const selected = [...sharpMindQuestions].sort(() => 0.5 - Math.random()).slice(0, 10);
+
+            selected.forEach((item, idx) => {
+                const qCard = document.createElement('div');
+                qCard.className = 'question-card';
+                let ops = [...item.options].sort(() => 0.5 - Math.random());
+                let optionsHtml = ops.map(opt => `
+                    <label>
+                        <input type="radio" name="q${idx}" data-s="${opt.s}">
+                        ${opt.t}
+                    </label>
+                `).join('');
+
+                qCard.innerHTML = `<h3>${idx + 1}. ${item.q}</h3><div class="options">${optionsHtml}</div>`;
+                container.appendChild(qCard);
+            });
+        }
+
+        function calculateResult() {
+            const checked = document.querySelectorAll('input:checked');
+            if (checked.length < 10) return alert("Please answer all questions!");
+
+            let totalScore = 0;
+            checked.forEach(o => totalScore += parseInt(o.dataset.s));
+            let scorePct = Math.round((totalScore / 250) * 100);
+
+            let label = "";
+            let desc = "";
+
+            if (scorePct > 85) {
+                label = "Genius Mind";
+                desc = "Your IQ level is amazing! You think out-of-the-box and can solve difficult puzzles in minutes.";
+            } else if (scorePct > 55) {
+                label = "Sharp Thinker";
+                desc = "You are quite intelligent and grasp logic very well. A little more practice can make you a genius.";
+            } else if (scorePct > 30) {
+                label = "Average Brain";
+                desc = "Your mind is normal, but you tend to rush when applying logic. Make it a habit to solve puzzles.";
+            } else {
+                label = "Slow Thinker";
+                desc = "You are in strong need of mental exercises. Try to think about everything with a little more depth.";
+            }
+
+            document.getElementById('personality-label').innerText = label;
+            document.getElementById('ego-description').innerText = desc;
+            document.getElementById('quiz-container').style.display = 'none';
+            document.getElementById('main-submit').style.display = 'none';
+            document.getElementById('result').style.display = 'block';
+            animateMainCircle(scorePct);
+        }
+
+        function animateMainCircle(target) {
+            let curr = 0;
+            let el = document.getElementById('coreScore');
+            let text = document.getElementById('main-percent');
+            let intr = setInterval(() => {
+                if (curr >= target) clearInterval(intr);
+                el.style.setProperty('--percent', curr);
+                text.innerText = curr + '%';
+                if (curr < target) curr++;
+            }, 20);
+        }
+
+        window.onload = initQuiz;
+        window.addEventListener("load", () => {
+            setTimeout(() => {
+                const loader = document.getElementById("loader");
+                loader.style.opacity = "0";
+                setTimeout(() => loader.style.display = "none", 500);
+            }, 2000);
+        });
+        function calculateResult() {
+            const allQuestions = document.querySelectorAll('.question-card');
+            const checked = document.querySelectorAll('input:checked');
+
+            if (checked.length < 10) {
+                alert("Please answer all questions!");
+                return;
+            }
+
+            let totalScore = 0;
+
+            allQuestions.forEach(card => {
+                const options = card.querySelectorAll('input[type="radio"]');
+
+                options.forEach(opt => {
+                    const label = opt.parentElement;
+                    const score = parseInt(opt.dataset.s);
+
+                    // correct answer (25 points)
+                    if (score === 25) {
+                        label.classList.add('correct');
+                    }
+
+                    // user selected wrong answer
+                    if (opt.checked && score !== 25) {
+                        label.classList.add('wrong');
+                    }
+
+                    // disable further clicking
+                    opt.disabled = true;
+                });
+            });
+
+            checked.forEach(o => totalScore += parseInt(o.dataset.s));
+            let scorePct = Math.round((totalScore / 250) * 100);
+
+            let label = "";
+            let desc = "";
+
+            if (scorePct > 85) {
+                label = "Genius Mind";
+                desc = "Your IQ level is amazing! You think out-of-the-box and can solve difficult puzzles in minutes.";
+            } else if (scorePct > 55) {
+                label = "Sharp Thinker";
+                desc = "You are quite intelligent and grasp logic very well.";
+            } else if (scorePct > 30) {
+                label = "Average Brain";
+                desc = "Your mind is normal, but you need more logical practice.";
+            } else {
+                label = "Slow Thinker";
+                desc = "Try more brain exercises to improve your thinking speed.";
+            }
+
+            document.getElementById('personality-label').innerText = label;
+            document.getElementById('ego-description').innerText = desc;
+
+            // ❌ quiz hide nahi karenge
+            document.getElementById('main-submit').style.display = 'none';
+            document.getElementById('result').style.display = 'block';
+
+            animateMainCircle(scorePct);
+        }
+
+    </script>
+</body>
+
+</html>

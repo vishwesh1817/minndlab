@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindLab | Level 2</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<style>
+    :root {
+        --bg: #0f172a;
+        --primary: #6c63ff;
+        --text-main: #f1f5f9;
+        --card-bg: #ffffff;
+        --mind: #3b82f6;
+        --ego: #ef4444;
+        --attitude: #a855f7;
+        --help: #22c55e;
+    }
+
+    .container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    header {
+        text-align: center;
+        margin-bottom: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .level-tag {
+        background: #ffffff;
+        color: var(--primary);
+        padding: 15px;
+        border-radius: 10px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        border: 1px solid var(--primary);
+    }
+
+    h2 {
+        font-size: 29px;
+        background: linear-gradient(90deg, #38bdf8, #a855f7);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-top: 15px;
+    }
+
+    .question-card {
+        background: white;
+        border-radius: 10px;
+        width: 100%;
+        padding: 20px;
+        border: 1px solid;
+        margin-bottom: 20px;
+        border: 1px solid #e6e7eb;
+        display: flex;
+        align-items: left;
+        justify-content: center;
+        flex-direction: column;
+        animation: slideUp 0.5s ease;
+    }
+
+    .question-card h3 {
+        font-size: 20px;
+        width: 100%;
+        text-align: left;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .options {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    @media (max-width: 650px) {
+        .options {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    label {
+        width: 80%;
+        padding: 14px;
+        border: 1px solid #e6e7eb;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: left;
+        color: #222222;
+        background-color: transparent;
+    }
+
+    label:hover {
+        background: #6c63ff1a;
+        border-color: var(--primary);
+    }
+
+    input[type="radio"] {
+        margin-right: 10px;
+        margin-left: 20px;
+        accent-color: #6c63ff;
+        transition: all 0.3s;
+    }
+
+    label:has(input:checked) {
+        background-color: #ffffff;
+        border: 1px solid #6c63ff;
+        color: #0f172a;
+        font-weight: bold;
+    }
+
+    .submit-btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 250px;
+        height: 50px;
+        max-width: 300px;
+        margin: 40px auto;
+        gap: 10px;
+        background-color: #6c63ff;
+        border-radius: 10px;
+        color: rgb(255, 255, 255);
+        border: 1px solid #e6e7eb;
+        transition: all 0.2s;
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 15px 25px rgba(0, 0, 0, 0.137);
+    }
+
+    #result {
+        display: none;
+        text-align: center;
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        width: 90%;
+        animation: slideUp 0.8s ease;
+    }
+
+    .main-result-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+    }
+
+    .core-circle {
+        width: 220px;
+        height: 220px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: conic-gradient(var(--primary) calc(var(--percent) * 1%), #f1f5f9 0);
+        position: relative;
+        transition: --percent 0.5s;
+    }
+
+    .inner-circle {
+        width: 180px;
+        height: 180px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .inner-circle strong {
+        font-size: 40px;
+        color: var(--bg);
+    }
+
+    .inner-circle span {
+        font-size: 14px;
+        color: var(--primary);
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .stats-grid {
+        width: 100%;
+        max-width: 400px;
+        text-align: left;
+    }
+
+    .stat-item {
+        margin-bottom: 15px;
+    }
+
+    .stat-item span {
+        font-size: 12px;
+        font-weight: bold;
+        color: #64748b;
+    }
+
+    .bar-bg {
+        width: 100%;
+        height: 8px;
+        background: #f1f5f9;
+        border-radius: 10px;
+        margin-top: 5px;
+        overflow: hidden;
+    }
+
+    .bar-fill {
+        height: 100%;
+        border-radius: 10px;
+        transition: width 1s ease-out;
+    }
+
+
+    .submit-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 15px 25px rgba(0, 0, 0, 0.137);
+    }
+
+    .stats-summary {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+        margin-top: 20px;
+        font-size: 12px;
+        color: #64748b;
+    }
+
+    .summary-item {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .summary-item strong {
+        color: var(--primary);
+        font-size: 16px;
+    }
+
+    @media screen and (max-width:425px) {
+        .question-card {
+            width: 85%;
+        }
+
+        .question-card h3 {
+            font-size: 14px;
+            font-weight: 100;
+        }
+
+        .options {
+            gap: 0px;
+        }
+
+        label {
+            padding: 0px;
+            border: 1px solid transparent;
+        }
+
+        label:has(input:checked) {
+            border: 1px solid transparent;
+
+        }
+    }
+</style>
+
+<body>
+    <div class="trns">
+        <a href="level2.html">
+            <img src="icone/language-translation-svgrepo-com.svg" alt="">
+        </a>
+    </div>
+    <div class="head">
+        <nav>
+            <div class="logo">
+                <img src="colored-logo.png">
+                <span>MINDLAB</span>
+            </div>
+            <div class="menu">
+                <a href="index.html">HOME</a>
+                <a href="levels.html">LEVELS</a>
+                <a href="motivation.html">MOTIVATION</a>
+                <a href="improve.html">IMPROVE YOURSELF</a>
+                <a href="book.html">BOOKS</a>
+                <a class="bbb" href="levels.html">START<img src="icone/white-roket.svg" width="16px"></a>
+            </div>
+            <button class="menu1" onclick="openNav()"><img src="icone/menu-01-stroke-rounded.svg" width="25px"></button>
+            <div id="mySidenav" class="slider">
+                <div class="co">
+                    <button class="closebtn" onclick="closeNav()"><img
+                            src="icone/cancel-01-stroke-rounded.svg"></button>
+                    <div class="ho"></div>
+                    <div class="li">
+                        <a href="index.html"><img src="icone/home-09-stroke-rounded (1).svg" alt="">HOME</a>
+                        <a href="motivation.html"><img src="icone/idea-stroke-rounded (1).svg" alt="">QUOTES</a>
+                        <a class="acti" href="levels.html"><img src="icone/trade-up-stroke-rounded.svg"
+                                alt=""><span>LEVEL</span></a>
+                        <a href="improve.html"><img src="icone/activity-01-stroke-rounded (1).svg" alt="">IMPROVE</a>
+                        <a href="book.html"><img src="icone/book-02-stroke-rounded (1).svg" alt="">BOOK</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div class="main">
+        <div class="container">
+            <header>
+                <span class="level-tag" style="margin-top: 20px;">LEVEL 2 - PSYCHOLOGICAL DEPTH</span>
+                <h2>The Labyrinth of Conscience</h2>
+                <p style="color: #64748b;">Basic sawalo se upar uth kar, ab waqt hai apne andar ki gehrayi ko samajhne
+                    ka.
+                    In 20 sawalo mein koi "Hero" ya "Villain" nahi hai, sirf aapki asliyat hai.</p>
+            </header>
+
+            <div id="quiz-container"></div>
+
+            <button id="main-submit" class="submit-btn" onclick="calculateResult()">Generate Mental Portrait</button>
+
+            <div id="result">
+                <h2 style="color: var(--bg); margin-bottom: 10px;">Your Mind Synthesis</h2>
+                <p style="color: #64748b; margin-bottom: 30px;">Analyzing your subconscious patterns...</p>
+
+                <div class="main-result-container">
+                    <div class="core-circle" id="coreScore" style="--percent: 0;">
+                        <div class="inner-circle">
+                            <span id="personality-label" style="letter-spacing: 1px;">Analyzing...</span>
+                            <strong id="main-percent">0%</strong>
+                            <small style="color: #94a3b8; font-size: 10px; margin-top: 5px;">OVERALL SCORE</small>
+                        </div>
+                    </div>
+
+                    <div class="stats-summary"
+                        style="display: flex; justify-content: space-around; width: 100%; margin-top: 20px;">
+                        <div class="summary-item"><span>MIND</span><br><strong id="sum-m"
+                                style="color:var(--mind)">0%</strong></div>
+                        <div class="summary-item"><span>EGO</span><br><strong id="sum-e"
+                                style="color:var(--ego)">0%</strong></div>
+                        <div class="summary-item"><span>ATTITUDE</span><br><strong id="sum-a"
+                                style="color:var(--attitude)">0%</strong></div>
+                        <div class="summary-item"><span>HELP</span><br><strong id="sum-h"
+                                style="color:var(--help)">0%</strong></div>
+                    </div>
+                </div>
+
+                <button class="submit-btn" style="margin-top: 30px;" onclick="location.reload()">Re-Take Test</button>
+            </div>
+        </div>
+    </div>
+    <div class="foot">
+        <div class="footer">
+            <div class="foot-logo">
+                <div class="lo">
+                    <img src="colored-logo.png" width="30px">
+                    MINDLAB
+                </div>
+                <h3>Understand your mind. Improve your life.</h3>
+                <p>MindLab helps you analyze your personality, mindset, ego, and habits through smart questions and
+                    self-growth guidance.</p>
+            </div>
+            <div class="lin">
+                <div class="foot-links">
+                    <h4>Quick Links</h4>
+                    <br>
+                    <a href="index.html">Home</a>
+                    <a href="levels.html">Level</a>
+                    <a href="motivation.html">Motivation</a>
+                    <a href="improve.html">Improve Yourself</a>
+                </div>
+                <div class="foot-features">
+                    <h4>FEATURES</h4>
+                    <br>
+                    <a href="levels.html">Ego Level</a>
+                    <a href="levels.html">Attitude Balance</a>
+                    <a href="levels.html">Sharp Mind</a>
+                    <a href="levels.html">Helpfulness</a>
+                </div>
+            </div>
+        </div>
+        <div class="copy">
+            <div class="dis">
+                <span>This website is created for educational purposes only. The personality results are not medical or
+                    psychological advice.</span>
+            </div>
+            <div class="rights">
+                <span>© 2025 MindLab. All rights reserved.
+                </span>
+            </div>
+        </div>
+    </div>
+    <div id="loader">
+        <div class="loader-box">
+            <div class="ring">
+                <img src="img/maze.gif" width="40px">
+            </div>
+            <div class="bx">
+                <span>MINDLAB</span>
+                <small>Fuel Your Mind</small>
+            </div>
+        </div>
+    </div>
+    <script>
+        function openNav() { document.getElementById("mySidenav").style.width = "120px"; }
+        function closeNav() { document.getElementById("mySidenav").style.width = "0"; }
+
+        const questionPool = [
+            { q: "Aapka mentor masoomon ko fasa kar successful hua. Ab wahi masoom aapke paas badla lene ke liye madad maang raha hai:", options: [{ t: "Mentor ko dhoka dekar masoom ka sath dunga", a: 20 }, { t: "Dono ko ladwa kar khud top par pahunchunga", e: 25 }, { t: "Mentor ko bachane ke liye us masoom ko chup karwa dunga", h: 15 }, { t: "Situation monitor karunga ki kiska palda bhari hai", m: 20 }] },
+
+            { q: "1000 logon ko bachane ke liye aapko ek begunah bachche ki bali (sacrifice) deni hogi. Kya karenge?", options: [{ t: "Bachaunga, 1000 ki value 1 se zyada hai", m: 25 }, { t: "Nahi, main qatil nahi banna chahta", a: 20 }, { t: "Begunah ko convince karunga kurban hone ke liye", h: 20 }, { t: "Bali ka ilzam kisi aur par laga dunga", e: 25 }] },
+
+            { q: "Dushman ko tabaah karne ka button aapke paas hai, par uske sath uske masoom parivaar ka ghar bhi jal jayega:", options: [{ t: "Button dabaunga, dushman ko mitaana priority hai", e: 25 }, { t: "Chhod dunga, par dushman ko ehsan tale dabaunga", h: 20 }, { t: "Aisa plan banaunga ki sirf dushman tabaah ho", m: 25 }, { t: "Dushmani hi khatam kar dunga", a: 20 }] },
+
+            { q: "Duniya 1 saal mein khatam hogi. Spaceship mein 1 seat bachi hai. Wo aapki hai ya ek pregnant aurat ki?", options: [{ t: "Meri hai, main marna nahi chahta", e: 25 }, { t: "Aurat ko dunga, taaki agali nasal bach sake", h: 25 }, { t: "Spaceship hi tabaah kar dunga, sab sath marenge", a: 20 }, { t: "Seat bech dunga high price par", m: 15 }] },
+
+            { q: "Aapka dost qatil hai, par usne ye jurm aapki jaan bachane ke liye kiya. Police aapke darwaze par hai:", options: [{ t: "Dost ko handover karunga, kanoon pehle hai", a: 20 }, { t: "Jhoothi gawahi dekar usey bachaunga", h: 25 }, { t: "Dost ko bhaga dunga par usse hamesha ke liye picha chhuda lunga", m: 20 }, { t: "Dost ko blackmail karunga taaki wo mere niche rahe", e: 25 }] },
+
+            { q: "Aapko 'Amar' hone ka mauka milta hai par har 10 saal mein aapko apne kisi pyare ko bhulna (memory wipe) hoga:", options: [{ t: "Manzoor hai, power ki yahi keemat hai", e: 25 }, { t: "Nahi, yaadein hi zindagi hain", h: 25 }, { t: "Bina pyaro ke akela rahunga taaki dard na ho", a: 20 }, { t: "Is machine ko hack karke rules badlunga", m: 25 }] },
+
+            { q: "Dushman maut ke kareeb hai aur sirf aapka blood group match karta hai. Kya karenge?", options: [{ t: "Blood dunga, insaniyat badi hai", h: 25 }, { t: "Mana karunga, maut uska karam hai", e: 25 }, { t: "Blood ke badle uski saari property mangunga", m: 25 }, { t: "Hospital se hi gayab ho jaunga", a: 20 }] },
+
+            { q: "Ek machine future dikhati hai. Aapne dekha ki aapka beta bada hokar ek dictator banega aur lakho ko marega:", options: [{ t: "Use bachpan se hi sakhti se control karunga", m: 25 }, { t: "Kismat par chhod dunga", a: 20 }, { t: "Usey maarne ka kathor faisla lunga", e: 25 }, { t: "Pyar se usey badalne ki koshish karunga", h: 20 }] },
+
+            { q: "Success mili par puri duniya keh rahi hai ki aapne cheating ki hai, jabki aap sachaai jante hain:", options: [{ t: "Duniya ko ignore karunga, paisa mere paas hai", a: 20 }, { t: "Unhe expose karunga aur court tak le jaunga", m: 25 }, { t: "Apni success unke muh par maarunga", e: 25 }, { t: "Success chhod dunga taaki image saaf rahe", h: 15 }] },
+
+            { q: "Aap kisi ek 'Crime' ko duniya se mita sakte hain, par koi dusra crime double ho jayega:", options: [{ t: "Murder mitaunga (par chori double hogi)", h: 20 }, { t: "Corruption mitaunga (par hinsa double hogi)", m: 25 }, { t: "Kuch nahi badlunga, balance zaroori hai", a: 25 }, { t: "Power ka use karke sirf khud ko safe karunga", e: 25 }] },
+
+            { q: "Aapki team ki galti se kisi ki jaan chali gayi. Leader aap hain:", options: [{ t: "Puri zimmedari lekar resign karunga", h: 25 }, { t: "Worker ko bali ka bakra banaunga", e: 25 }, { t: "System fix karke aage badhunga", m: 20 }, { t: "Legal team se matter daba dunga", a: 20 }] },
+
+            { q: "Aapko pata chalta hai ki aapka pura dharm/belief system ek jhoot hai:", options: [{ t: "Main phir bhi follow karunga sukoon ke liye", a: 25 }, { t: "Duniya ko sach bata kar chaos faila dunga", e: 25 }, { t: "Apna naya system banaunga", m: 25 }, { t: "Sach ko accept karke khamosh ho jaunga", h: 20 }] },
+
+            { q: "Paisa vs Sukoon: 1000 Crore milenge par aap kabhi kisi se 'Love' nahi kar payenge:", options: [{ t: "Paisa, duniya khareed lunga", e: 25 }, { t: "Sukoon, bina pyar ke paisa mitti hai", a: 25 }, { t: "Paisa lunga aur logo ka bhala karunga", h: 20 }, { t: "Condition bypass karne ka rasta dhoondunga", m: 20 }] },
+
+            { q: "Society ke rules aapki growth rok rahe hain:", options: [{ t: "Rules tod kar aage badhunga", e: 25 }, { t: "Rules ke andar rasta nikalunga", m: 20 }, { t: "System badalne ke liye ladunga", h: 25 }, { t: "Growth chhod kar shanti chununga", a: 25 }] },
+
+            { q: "Aapko aisi bribe mil rahi hai jo 100 anaath bacho ka ghar bacha sakti hai, par ye illegal hai:", options: [{ t: "Lunga, bacho ka bhala priority hai", h: 25 }, { t: "Mana karunga, galat rasta hamesha galat hai", a: 25 }, { t: "Lunga aur bribe dene wale ko baad mein fasa dunga", m: 20 }, { t: "Adha bacho ko dunga, adha khud rakhunga", e: 25 }] },
+
+            { q: "Aapko pata chalta hai ki aapka sabse bada dushman darasal aapka bhai hai:", options: [{ t: "Rishta bhool kar dushmani jaari rakhunga", e: 25 }, { t: "Hamesha ke liye door chala jaunga", a: 25 }, { t: "Usey sach bata kar sath launga", h: 25 }, { t: "Is situation ko use karunga usey control karne ke liye", m: 20 }] },
+
+            { q: "Power milti hai ki aap kisi ki 'Kismat' likh sakein, par badle mein aapki life se 10 saal kam honge:", options: [{ t: "Apne apno ki kismat likhunga", h: 25 }, { t: "Nahi, meri life mere liye keemti hai", a: 25 }, { t: "Dushman ki kismat kharab karunga", e: 25 }, { t: "Iska scientific use karke duniya badlunga", m: 25 }] },
+
+            { q: "Aapki galti se company ko loss hua, par ilzam aapke junior par lag gaya hai:", options: [{ t: "Chup rahunga, mera career bada hai", e: 25 }, { t: "Accept karunga aur junior ko bachaunga", h: 25 }, { t: "Junior ki help karunga secretly", m: 15 }, { t: "Resign kar dunga bina wajah bataye", a: 20 }] },
+
+            { q: "Duniya mein sirf do log bache hain, aap aur ek aisa shaks jo aapko nafrat karta hai:", options: [{ t: "Usey maar dunga taaki akela sukoon se rahu", e: 25 }, { t: "Usey dosti karne ki koshish karunga", h: 20 }, { t: "Usey apna naukar bana kar rakhunga", m: 25 }, { t: "Usey ignore karke apna rasta pakdunga", a: 25 }] },
+
+            { q: "Success ke liye aapko apne morals ke khilaf ek 'Zehreela' kaam karna hoga:", options: [{ t: "Karunga, result matter karta hai", e: 25 }, { t: "Kabhi nahi karunga", a: 25 }, { t: "Aisa rasta nikalunga ki moral bhi bache", m: 20 }, { t: "Majboori samajh kar karunga", h: 10 }] },
+
+            { q: "Aapko 'Justice' aur 'Law' mein se ek ko chunna hai:", options: [{ t: "Justice, chahe kanoon todna pade", m: 25 }, { t: "Law, system zaroori hai", a: 25 }, { t: "Justice, taaki gareebo ka bhala ho", h: 20 }, { t: "Apna khud ka kanoon banaunga", e: 25 }] },
+
+            { q: "Logon ki bheed ek masoom ko maar rahi hai kyunki unhe lagta hai wo chor hai:", options: [{ t: "Bheed mein shamil ho jaunga", e: 20 }, { t: "Bheed se ladunga masoom ko bachane", h: 25 }, { t: "Police ko call karke door rahunga", m: 20 }, { t: "Chupchap tamasha dekhunga", a: 25 }] },
+
+            { q: "Aapko pata chalta hai ki aapka hero (idol) darasal ek serial killer hai:", options: [{ t: "Unhe expose karunga", e: 25 }, { t: "Unse seekhunga ki itne saal kaise bache", m: 25 }, { t: "Ignore karunga, wo kaam toh accha karte hain", a: 20 }, { t: "Unhe sudharne ki koshish karunga", h: 15 }] },
+
+            { q: "Zindagi ek 'War' hai ya ek 'Prison'?", options: [{ t: "War, jeetna hi hai", e: 25 }, { t: "Prison, azadi dhoondni hai", a: 25 }, { t: "War, kamzoron ki hifazat ke liye", h: 20 }, { t: "Prison, system ko samajhne ke liye", m: 25 }] },
+
+            { q: "Aapko secret pata hai ki ek bade politician ka murder hone wala hai:", options: [{ t: "Murder hone dunga, wo bura aadmi hai", e: 25 }, { t: "Bachaunga, jaan sabki keemti hai", h: 25 }, { t: "Is khabar ko high price par bechunga", m: 25 }, { t: "Neutral rahunga, meri problem nahi", a: 25 }] },
+
+            { q: "Aapko power milti hai ki aap kisi ki 'Pain' (Dard) mita sakein par wo dard aapko hoga:", options: [{ t: "Sabka dard le lunga", h: 25 }, { t: "Sirf unka dard jinse mujhe fayda ho", e: 20 }, { t: "Nahi, main dard nahi jhel sakta", a: 25 }, { t: "Usey control karne ke liye use karunga", m: 20 }] },
+
+            { q: "Aapko pata chale ki aapka partner aapke sath sirf paise ke liye hai:", options: [{ t: "Usey barbaad kar dunga", e: 25 }, { t: "Usey chhod dunga bina kuch kahe", a: 25 }, { t: "Paisa dena band karke sach dekhunga", m: 25 }, { t: "Dukh hoga par rishta nibhaunga", h: 10 }] },
+
+            { q: "Aapko 'Truth' aur 'Peace' mein se ek chunna hai:", options: [{ t: "Truth, chahe ladai ho", m: 25 }, { t: "Peace, chahe jhoot bolna pade", a: 25 }, { t: "Peace, sabki khushi ke liye", h: 25 }, { t: "Truth, taaki main control mein rahu", e: 25 }] },
+
+            { q: "Aapka dushman aapke saamne gid-gida raha hai:", options: [{ t: "Maaf karunga", h: 25 }, { t: "Aur zyada neecha dikhaunga", e: 25 }, { t: "Usey apna servant bana lunga", m: 20 }, { t: "Ignore karke chala jaunga", a: 25 }] },
+
+            { q: "Aakhri message duniya ke liye:", options: [{ t: "Main hi king tha", e: 25 }, { t: "Pyaar hi sab kuch hai", h: 25 }, { t: "Sab dhokha hai", a: 25 }, { t: "Sachaai ki hamesha jeet hogi", m: 25 }] }
+        ];
+
+        function initQuiz() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+            
+            const selected = [...questionPool].sort(() => 0.5 - Math.random()).slice(0, 20);
+
+            selected.forEach((item, idx) => {
+                const qCard = document.createElement('div');
+                qCard.className = 'question-card';
+                let ops = [...item.options].sort(() => 0.5 - Math.random());
+                let optionsHtml = ops.map(opt => `
+                    <label><input type="radio" name="q${idx}" 
+                    data-m="${opt.m || 0}" data-e="${opt.e || 0}" data-a="${opt.a || 0}" data-h="${opt.h || 0}">
+                    ${opt.t}</label>`).join('');
+                qCard.innerHTML = `<h3>${idx + 1}. ${item.q}</h3><div class="options">${optionsHtml}</div>`;
+                container.appendChild(qCard);
+            });
+        }
+        function calculateResult() {
+            const checked = document.querySelectorAll('input:checked');
+            if (checked.length < 20) return alert("Please answer all questions!");
+
+            let s = { mind: 0, ego: 0, attitude: 0, help: 0 };
+            checked.forEach(o => {
+                s.mind += parseInt(o.dataset.m) || 0;
+                s.ego += parseInt(o.dataset.e) || 0;
+                s.attitude += parseInt(o.dataset.a) || 0;
+                s.help += parseInt(o.dataset.h) || 0;
+            });
+
+         
+            let mPct = Math.min(Math.round((s.mind / 200) * 100), 100);
+            let ePct = Math.min(Math.round((s.ego / 200) * 100), 100);
+            let aPct = Math.min(Math.round((s.attitude / 200) * 100), 100);
+            let hPct = Math.min(Math.round((s.help / 200) * 100), 100);
+
+            
+
+            let balanceScore = (mPct * 0.4) + (aPct * 0.3) + (hPct * 0.3);
+
+            
+            if (ePct > 60) balanceScore -= (ePct - 60); 
+            if (ePct < 15) balanceScore -= 10; 
+
+            let finalUnifiedScore = Math.max(5, Math.min(98, Math.round(balanceScore))); 
+
+           
+            let scores = { "MIND": mPct, "EGO": ePct, "ATTITUDE": aPct, "HELP": hPct };
+            let dominant = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+
+            let title = "";
+            let desc = "";
+
+            if (dominant === "EGO" && ePct > 70) {
+                title = "The Commander";
+                desc = "Aap parinaam toh laate hain, lekin aapko hamdardi (empathy) par kaam karne ki zarurat hai.";
+            } else if (dominant === "MIND") {
+                title = "The Strategist";
+                desc = "Tarkshil aur vishleshnatmak, aap un patterns ko dekh lete hain jo dusre chhod dete hain.";
+            } else if (dominant === "ATTITUDE") {
+                title = "The Stoic";
+                desc = "Bhavnatmak roop se sthir aur dabav mein bhi majboot rehne wale.";
+            } else if (dominant === "HELP") {
+                title = "The Altruist";
+                desc = "Aapki takat dusron ko banane aur unka saath dene mein hai.";
+            } else {
+                title = "The Balanced Soul";
+                desc = "Aapke paas ego aur hamdardi ke beech ek durlabh samanya (harmony) hai.";
+            }
+
+           
+            document.getElementById('personality-label').innerText = title;
+            document.getElementById('sum-m').innerText = mPct + '%';
+            document.getElementById('sum-e').innerText = ePct + '%';
+            document.getElementById('sum-a').innerText = aPct + '%';
+            document.getElementById('sum-h').innerText = hPct + '%';
+
+           
+            document.getElementById('quiz-container').style.display = 'none';
+            document.getElementById('main-submit').style.display = 'none';
+            document.getElementById('result').style.display = 'block';
+
+            animateMainCircle(finalUnifiedScore);
+        }
+
+       
+        function animateMainCircle(target) {
+            let curr = 0;
+            let el = document.getElementById('coreScore');
+            let text = document.getElementById('main-percent');
+            let intr = setInterval(() => {
+                if (curr >= target) {
+                    clearInterval(intr);
+                }
+                el.style.setProperty('--percent', curr);
+                text.innerText = curr + '%';
+                if (curr < target) curr++;
+            }, 20);
+        }
+
+        
+        window.onload = initQuiz;
+        document.body.classList.add("loading");
+
+        window.addEventListener("load", () => {
+            setTimeout(() => {
+                const loader = document.getElementById("loader");
+                loader.style.opacity = "0";
+                loader.style.transition = "opacity 0.5s ease";
+
+                setTimeout(() => {
+                    loader.style.display = "none";
+                    document.body.classList.remove("loading");
+                }, 500);
+
+            }, 2000); 
+        });
+    </script>
+</body>
+
+</html>

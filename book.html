@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindLab</title>
+    <link rel="stylesheet" href="main.css">
+    <style>
+        .text-high a {
+            margin-top: 10px;
+            cursor: pointer;
+            width: 200px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            background-color: #6c63ff;
+            border-radius: 10px;
+            color: white;
+            border: none;
+            transition: all 0.2s;
+            box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: clamp(12px, 3vw, 20px);
+            margin-top: 20px;
+        }
+
+        .gl-card img {
+            width: 100%;
+            aspect-ratio: 4 / 5;
+            object-fit: cover;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform .35s ease, box-shadow .35s ease;
+        }
+
+        .gl-card img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, .15);
+        }
+
+        #imgToggle {
+            display: none;
+        }
+
+        .more-imgs {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: inherit;
+            gap: inherit;
+        }
+
+        
+        .more-imgs .gl-card {
+            max-height: 0;
+            opacity: 0;
+            transform: translateY(35px) scale(0.96);
+            pointer-events: none;
+            overflow: hidden;
+            transition:
+                max-height .7s ease,
+                opacity .45s ease,
+                transform .5s ease;
+            transition-delay: calc(var(--i) * .06s);
+        }
+
+        
+        #imgToggle:checked~.gallery .more-imgs .gl-card {
+            max-height: 500px;
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+
+
+        .img-btn {
+            margin-top: 18px;
+            width: 150px;
+            height: 45px;
+            background: #222;
+            color: #fff;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .show-less {
+            display: none;
+        }
+
+        #imgToggle:checked~.show-more {
+            display: none;
+        }
+
+        #imgToggle:checked~.show-less {
+            display: flex;
+        }
+
+       
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .88);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .4s ease;
+            z-index: 999;
+        }
+
+        .modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal img {
+            max-width: 95vw;
+            max-height: 90vh;
+            border-radius: 5px;
+            transform: scale(.85);
+            transition: transform .4s ease;
+        }
+
+        .modal.active img {
+            transform: scale(1);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            width: 30px;
+            height: 30px;
+            background: #fff;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 1024px) {
+            .gallery {
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            }
+        }
+
+        @media (max-width: 600px) {
+            .gallery {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .gallery img {
+                border-radius: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="backkk">
+        <a href="#" id="goBack"><img src="icone/arrow-left-01-stroke-rounded.svg" width="30px"></a>
+    </div>
+    <div id="loader">
+        <div class="loader-box">
+            <div class="ring">
+                <img src="img/maze.gif" width="40px">
+            </div>
+            <div class="bx">
+                <span>MINDLAB</span>
+                <small>Fuel Your Mind</small>
+            </div>
+        </div>
+    </div>
+    <div class="head">
+        <nav>
+            <div class="logo">
+                <img src="colored-logo.png" >
+                <span>MINDLAB</span>
+            </div>
+            <div class="menu">
+                <a href="index.html">HOME</a>
+                <a href="levels.html">LEVELS</a>
+                <a href="motivation.html">MOTIVATION</a>
+                <a href="improve.html">IMPROVE YOURSELF</a>
+                <a href="book.html">BOOKS</a>
+                <a class="bbb" href="levels.html">START<img src="icone/white-roket.svg" width="16px"></a>
+            </div>
+            <button class="menu1" onclick="openNav()"><img src="icone/menu-01-stroke-rounded.svg" width="25px"></button>
+            <div id="mySidenav" class="slider">
+                <div class="co">
+                    <button class="closebtn" onclick="closeNav()"><img
+                            src="icone/cancel-01-stroke-rounded.svg"></button>
+                    <div class="ho"></div>
+                    <div class="li">
+                        <a href="index.html"><img src="icone/home-09-stroke-rounded (1).svg" alt="">HOME</a>
+                        <a href="motivation.html"><img src="icone/idea-stroke-rounded (1).svg" alt="">QUOTES</a>
+                        <a href="levels.html"><img src="icone/trade-up-stroke-rounded (1).svg" alt="">LEVEL</a>
+                        <a href="improve.html"><img src="icone/activity-01-stroke-rounded (1).svg" alt="">IMPROVE</a>
+                        <a class="acti" href="book.html"><img src="icone/book-02-stroke-rounded.svg"
+                                alt=""><span>BOOK</span></a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div class="main">
+        <div class="hero-sec">
+            <div class="hero-content">
+                <h1>Books That Shape Your Mind</h1>
+                <h5 style="color: #aaa;">Handpicked books for mindset, discipline, emotional control,
+                    self-growth, and real-life wisdom.</h5>
+                <h6 style="color: #aaa; font-size: 18px;">Read less junk. Think more deeply.</h6>
+                <a href="#ii" class="bttt">Explore Books<img src="icone/white-roket.svg" width="16px"></a>
+                <a><img src="icone/arrow-right-01-stroke-rounded.svg" width="16px">Exlpore MindLab</a>
+            </div>
+            <div class="hero-img hi">
+                <img src="back/undraw_book-lover_m9n3.svg" width="400px">
+            </div>
+        </div>
+        <div class="imggg" id="ii">
+            <h2>Recommended Books</h2>
+            <input type="checkbox" id="imgToggle">
+            <div class="gallery">
+
+                
+                <div class="gl-card"><img src="img/2 (13).jpg" onclick="openModal(this)"><a target="_blank" href="https://share.google/8h06sfUHPvFCAaLMn">Read Online</a></div>
+                <div class="gl-card"><img src="img/2 (2).jpg" onclick="openModal(this)"><a href="https://share.google/tz2Iwx0iwyyxYQ41R" target="_blank">Read Online</a></div>
+                <div class="gl-card"><img src="img/2 (3).jpg" onclick="openModal(this)"><a href="https://share.google/aZJkDug9XWd6alHWq" target="_blank">Read Online</a></div>
+                <div class="gl-card"><img src="img/2 (4).jpg" onclick="openModal(this)"><a href="https://share.google/GV7Q1v69mIHUIS7pR" target="_blank">Read Online</a></div>
+                <div class="gl-card"><img src="img/2 (6).jpg" onclick="openModal(this)"><a href="https://share.google/RKZFMGTMWGBuUkYwg" target="_blank">Read Online</a></div>
+                <div class="gl-card"><img src="img/2 (7).jpg" onclick="openModal(this)"><a href="https://share.google/sWZnhvjmW101Z3w9f" target="_blank">Read Online</a></div>
+
+                
+                <div class="more-imgs">
+                    <div class="gl-card" style="--i:1"><img src="img/2 (8).jpg" onclick="openModal(this)"><a href="https://share.google/U1EWROGCZWlhkjSwY" target="_blank">Read Online</a></div>
+                    <div class="gl-card" style="--i:2"><img src="img/2 (9).jpg" onclick="openModal(this)"><a href="https://share.google/VPTYKB2me4DuZGDpJ" target="_blank">Read Online</a></div>
+                    <div class="gl-card" style="--i:3"><img src="img/2 (10).jpg" onclick="openModal(this)"><a href="https://share.google/orPr4ZxcJL7s2mWXf" target="_blank">Read Online</a></div>
+                    <div class="gl-card" style="--i:4"><img src="img/2 (11).jpg" onclick="openModal(this)"><a href="https://share.google/Ya6EmyV262SVgV5kQ" target="_blank">Read Online</a></div>
+                    <div class="gl-card" style="--i:5"><img src="img/2 (12).jpg" onclick="openModal(this)"><a href="https://share.google/gdvf8m7CfswjzimhF" target="_blank">Read Online</a></div>
+                    <div class="gl-card" style="--i:6"><img src="img/2 (5).jpg" onclick="openModal(this)"><a href="#" target="_blank">Coming soon</a></div>
+                </div>
+
+            </div>
+
+            <label for="imgToggle" class="img-btn show-more">Show More</label>
+            <label for="imgToggle" class="img-btn show-less">Show Less</label>
+
+            
+            <div class="modal" id="viewer" onclick="closeModal()">
+                <button class="close-btn" onclick="event.stopPropagation(); closeModal()"><img src="icone/cancel-01-stroke-rounded.svg" alt=""></button>
+                <img id="viewerImg" onclick="event.stopPropagation()">
+            </div>
+
+        </div>
+        <div class="purpose-sec">
+            <h2>Why Books Matter for Self Growth</h2>
+            <h4 style="color: #aaa; font-size: 15px; text-align: center; margin-bottom: 10px;">Books are silent mentors.
+                They teach you how to think, not what to think.</h4>
+            <h3>Every strong mind is built through:</h3>
+            <div class="purpose-points">
+                <div class="point">
+                    <span class="no">01</span>
+                    <span>Deep thinking</span>
+                </div>
+                <div class="point">
+                    <span class="no">02</span>
+                    <span>Reflection</span>
+                </div>
+                <div class="point">
+                    <span class="no">03</span>
+                    <span>Learning from others’ mistakes</span>
+                </div>
+                <div class="point">
+                    <span class="no">04</span>
+                    <span>Applying wisdom in real life</span>
+                </div>
+            </div>
+        </div>
+        <div class="hero-sec" style="align-items: center;">
+            <div class="hero-content m-co" style="gap: 10px;">
+                <h2 style="text-align: center;">What These Books Teach You</h2>
+                <div class="pointh">
+                    <span class="no">01</span>
+                    <span>How to control your mind</span>
+                </div>
+                <div class="pointh">
+                    <span class="no">02</span>
+                    <span>How to stay disciplined without motivation</span>
+                </div>
+                <div class="pointh">
+                    <span class="no">03</span>
+                    <span>How to handle failure calmly</span>
+                </div>
+                <div class="pointh">
+                    <span class="no">04</span>
+                    <span>How to improve decision-making</span>
+                </div>
+                <div class="pointh">
+                    <span class="no">05</span>
+                    <span>How to grow silently</span>
+                </div>
+                <div class="pointh">
+                    <span class="no">06</span>
+                    <span>How to think long-term</span>
+                </div>
+            </div>
+            <div class="hero-img hi">
+                <img src="back/undraw_continuous-learning_a1ld.svg" width="400px">
+            </div>
+        </div>
+        <div class="purpose-sec">
+            <h2>How to Read for Growth</h2>
+            <div class="purpose-points">
+                <div class="point">
+                    <span class="no">01</span>
+                    <span>Read slowly</span>
+                </div>
+                <div class="point">
+                    <span class="no">02</span>
+                    <span>Highlight key ideas</span>
+                </div>
+                <div class="point">
+                    <span class="no">03</span>
+                    <span>Reflect after reading</span>
+                </div>
+                <div class="point">
+                    <span class="no">04</span>
+                    <span>Apply one idea at a time</span>
+                </div>
+            </div>
+        </div>
+        <div class="highlit">
+            <div class="text-high" style="border-radius: 10px;">
+                <h3 style="color: white">If you want to grow, start reading.</h3>
+                <h5 style="color: white">“ Your future self is waiting for the knowledge
+                    you refuse to read today. ”</h5>
+                <a href="#ii">Start Reading<img src="icone/white-roket.svg" width="16px"></a>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="foot">
+        <div class="footer">
+            <div class="foot-logo">
+                <div class="lo">
+                    <img src="colored-logo.png" width="30px">
+                    MINDLAB
+                </div>
+                <h3>Understand your mind. Improve your life.</h3>
+                <p>MindLab helps you analyze your personality, mindset, ego, and habits through smart questions and
+                    self-growth guidance.</p>
+            </div>
+            <div class="lin">
+                <div class="foot-links">
+                    <h4>Quick Links</h4>
+                    <br>
+                    <a href="index.html">Home</a>
+                    <a href="levels.html">Level</a>
+                    <a href="motivation.html">Motivation</a>
+                    <a href="improve.html">Improve Yourself</a>
+                </div>
+                <div class="foot-features">
+                    <h4>FEATURES</h4>
+                    <br>
+                    <a href="levels.html">Ego Level</a>
+                    <a href="levels.html">Attitude Balance</a>
+                    <a href="levels.html">Sharp Mind</a>
+                    <a href="levels.html">Helpfulness</a>
+                </div>
+            </div>
+        </div>
+        <div class="copy">
+            <div class="dis">
+                <span>This website is created for educational purposes only. The personality results are not medical or
+                    psychological advice.</span>
+            </div>
+            <div class="rights">
+                <span>© 2025 MindLab. All rights reserved.
+                </span>
+            </div>
+        </div>
+    </div>
+    <script>
+        function openNav() {
+            document.getElementById("mySidenav").style.width = "120px";
+        }
+
+        function closeNav() {
+            document.getElementById("mySidenav").style.width = "0";
+        }
+        const viewer = document.getElementById("viewer");
+        const viewerImg = document.getElementById("viewerImg");
+
+        function openModal(img) {
+            viewerImg.src = img.src;
+            viewer.classList.add("active");
+            document.body.style.overflow = "hidden";
+        }
+
+        function closeModal() {
+            viewer.classList.remove("active");
+            document.body.style.overflow = "";
+        }
+        document.body.classList.add("loading");
+
+        window.addEventListener("load", () => {
+            setTimeout(() => {
+                const loader = document.getElementById("loader");
+                loader.style.opacity = "0";
+                loader.style.transition = "opacity 0.5s ease";
+
+                setTimeout(() => {
+                    loader.style.display = "none";
+                    document.body.classList.remove("loading");
+                }, 500);
+
+            }, 1000); // 2 seconds
+        });
+    </script>
+    <script src="sc.js"></script>
+</body>
+
+</html>

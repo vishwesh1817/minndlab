@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindLab - Sharp Mind Test</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<style>
+    .correct {
+        border: 2px solid #22c55e !important;
+        background: #22c55e1a;
+        color: #065f46;
+        font-weight: bold;
+    }
+
+    .wrong {
+        border: 2px solid #ef4444 !important;
+        background: #ef44441a;
+        color: #7f1d1d;
+    }
+
+    :root {
+        --bg: #0f172a;
+        --primary: #6c63ff;
+        --text-main: #f1f5f9;
+        --card-bg: #ffffff;
+        --mind: #3b82f6;
+        --ego: #ef4444;
+        --attitude: #a855f7;
+        --help: #22c55e;
+    }
+
+    .container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    header {
+        text-align: center;
+        margin-bottom: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .level-tag {
+        background: #ffffff;
+        color: var(--primary);
+        padding: 15px;
+        border-radius: 10px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        border: 1px solid var(--primary);
+    }
+
+    h2 {
+        font-size: 29px;
+        background: linear-gradient(90deg, #38bdf8, #a855f7);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-top: 15px;
+    }
+
+    .question-card {
+        background: white;
+        border-radius: 10px;
+        width: 100%;
+        padding: 20px;
+        border: 1px solid;
+        margin-bottom: 20px;
+        border: 1px solid #e6e7eb;
+        display: flex;
+        align-items: left;
+        justify-content: center;
+        flex-direction: column;
+        animation: slideUp 0.5s ease;
+    }
+
+    .question-card h3 {
+        font-size: 20px;
+        width: 100%;
+        text-align: left;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .options {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    @media (max-width: 650px) {
+        .options {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    label {
+        width: 80%;
+        padding: 14px;
+        border: 1px solid #e6e7eb;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: left;
+        color: #222222;
+        background-color: transparent;
+    }
+
+    label:hover {
+        background: #6c63ff1a;
+        border-color: var(--primary);
+    }
+
+    input[type="radio"] {
+        margin-right: 10px;
+        margin-left: 20px;
+        accent-color: #6c63ff;
+        transition: all 0.3s;
+    }
+
+    label:has(input:checked) {
+        background-color: #ffffff;
+        border: 1px solid #6c63ff;
+        color: #0f172a;
+        font-weight: bold;
+    }
+
+    .submit-btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 250px;
+        height: 50px;
+        max-width: 300px;
+        margin: 40px auto;
+        gap: 10px;
+        background-color: #6c63ff;
+        border-radius: 10px;
+        color: rgb(255, 255, 255);
+        border: 1px solid #e6e7eb;
+        transition: all 0.2s;
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 15px 25px rgba(0, 0, 0, 0.137);
+    }
+
+    #result {
+        display: none;
+        text-align: center;
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        width: 90%;
+        animation: slideUp 0.8s ease;
+    }
+
+    .main-result-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+    }
+
+    .core-circle {
+        width: 220px;
+        height: 220px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: conic-gradient(var(--primary) calc(var(--percent) * 1%), #f1f5f9 0);
+        position: relative;
+        transition: --percent 0.5s;
+    }
+
+    .inner-circle {
+        width: 180px;
+        height: 180px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .inner-circle strong {
+        font-size: 40px;
+        color: var(--bg);
+    }
+
+    .inner-circle span {
+        font-size: 14px;
+        color: var(--primary);
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .stats-grid {
+        width: 100%;
+        max-width: 400px;
+        text-align: left;
+    }
+
+    .stat-item {
+        margin-bottom: 15px;
+    }
+
+    .stat-item span {
+        font-size: 12px;
+        font-weight: bold;
+        color: #64748b;
+    }
+
+    .bar-bg {
+        width: 100%;
+        height: 8px;
+        background: #f1f5f9;
+        border-radius: 10px;
+        margin-top: 5px;
+        overflow: hidden;
+    }
+
+    .bar-fill {
+        height: 100%;
+        border-radius: 10px;
+        transition: width 1s ease-out;
+    }
+
+
+    .submit-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 15px 25px rgba(0, 0, 0, 0.137);
+    }
+
+    .stats-summary {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+        margin-top: 20px;
+        font-size: 12px;
+        color: #64748b;
+    }
+
+    .summary-item {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .summary-item strong {
+        color: var(--primary);
+        font-size: 16px;
+    }
+
+    @media screen and (max-width:425px) {
+        .question-card {
+            width: 85%;
+        }
+
+        .question-card h3 {
+            font-size: 14px;
+            font-weight: 100;
+        }
+
+        .options {
+            gap: 0px;
+        }
+
+        label {
+            padding: 0px;
+            border: 1px solid transparent;
+        }
+
+        label:has(input:checked) {
+            border: 1px solid transparent;
+
+        }
+    }
+</style>
+
+<body>
+    <div class="trns">
+        <a href="mindlevel.html">
+            <img src="icone/language-translation-svgrepo-com.svg" alt="">
+        </a>
+    </div>
+    <div class="head">
+        <nav>
+            <div class="logo">
+                <img src="colored-logo.png">
+                <span>MINDLAB</span>
+            </div>
+            <div class="menu">
+                <a href="index.html">HOME</a>
+                <a href="levels.html">LEVELS</a>
+                <a href="motivation.html">MOTIVATION</a>
+                <a href="improve.html">IMPROVE YOURSELF</a>
+                <a href="book.html">BOOKS</a>
+                <a class="bbb" href="levels.html">START<img src="icone/white-roket.svg" width="16px"></a>
+            </div>
+            <button class="menu1" onclick="openNav()"><img src="icone/menu-01-stroke-rounded.svg" width="25px"></button>
+
+            <div id="mySidenav" class="slider">
+                <div class="co">
+                    <button class="closebtn" onclick="closeNav()"><img
+                            src="icone/cancel-01-stroke-rounded.svg"></button>
+                    <div class="ho"></div>
+                    <div class="li">
+                        <a href="index.html"><img src="icone/home-09-stroke-rounded (1).svg" alt="">HOME</a>
+                        <a href="motivation.html"><img src="icone/idea-stroke-rounded (1).svg" alt="">QUOTES</a>
+                        <a class="acti" href="levels.html"><img src="icone/trade-up-stroke-rounded.svg"
+                                alt=""><span>LEVEL</span></a>
+                        <a href="improve.html"><img src="icone/activity-01-stroke-rounded (1).svg" alt="">IMPROVE</a>
+                        <a href="book.html"><img src="icone/book-02-stroke-rounded (1).svg" alt="">BOOK</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div class="main">
+        <div class="container">
+            <header>
+                <span class="level-tag" style="margin-top: 20px;">LEVEL:
+                    SHARP MIND</span>
+                <h2>Test Your IQ & Logic</h2>
+                <p style="color: #94a3b8;">Yeh test aapki problem-solving aur mental speed ko check karega.</p>
+            </header>
+
+            <div id="quiz-container"></div>
+            <button id="main-submit" class="submit-btn" onclick="calculateResult()">Check My Sharpness</button>
+
+            <div id="result">
+                <h2 style="color: var(--bg); margin-bottom: 10px;">Mind Sharpness Report</h2>
+                <div class="main-result-container">
+                    <div class="core-circle" id="coreScore" style="--percent: 0;">
+                        <div class="inner-circle">
+                            <span id="personality-label" style="letter-spacing: 1px;">Calculating...</span>
+                            <strong id="main-percent">0%</strong>
+                            <small style="color: #94a3b8; font-size: 10px; margin-top: 5px;">MIND POWER SCORE</small>
+                        </div>
+                    </div>
+
+                    <div id="ego-description"
+                        style="color: #64748b; font-size: 14px; padding: 0 20px; line-height: 1.5;">
+                    </div>
+                </div>
+
+                <button class="submit-btn" style="margin-top: 30px;" onclick="location.reload()">Try Again</button>
+            </div>
+        </div>
+    </div>
+    <div class="foot">
+        <div class="footer">
+            <div class="foot-logo">
+                <div class="lo">
+                    <img src="colored-logo.png" width="30px">
+                    MINDLAB
+                </div>
+                <h3>Understand your mind. Improve your life.</h3>
+                <p>MindLab helps you analyze your personality, mindset, ego, and habits through smart questions and
+                    self-growth guidance.</p>
+            </div>
+            <div class="lin">
+                <div class="foot-links">
+                    <h4>Quick Links</h4>
+                    <br>
+                    <a href="index.html">Home</a>
+                    <a href="levels.html">Level</a>
+                    <a href="motivation.html">Motivation</a>
+                    <a href="improve.html">Improve Yourself</a>
+                </div>
+                <div class="foot-features">
+                    <h4>FEATURES</h4>
+                    <br>
+                    <a href="levels.html">Ego Level</a>
+                    <a href="levels.html">Attitude Balance</a>
+                    <a href="levels.html">Sharp Mind</a>
+                    <a href="levels.html">Helpfulness</a>
+                </div>
+            </div>
+        </div>
+        <div class="copy">
+            <div class="dis">
+                <span>This website is created for educational purposes only. The personality results are not medical or
+                    psychological advice.</span>
+            </div>
+            <div class="rights">
+                <span>© 2025 MindLab. All rights reserved.
+                </span>
+            </div>
+        </div>
+    </div>
+    <div id="loader">
+        <div class="loader-box">
+            <div class="ring">
+                <img src="img/maze.gif" width="40px">
+            </div>
+            <div class="bx">
+                <span>MINDLAB</span>
+                <small>Fuel Your Mind</small>
+            </div>
+        </div>
+    </div>
+    <script>
+        function openNav() { document.getElementById("mySidenav").style.width = "120px"; }
+        function closeNav() { document.getElementById("mySidenav").style.width = "0"; }
+
+
+        const sharpMindQuestions = [
+            { q: "Ek shakhs andheri gali mein kaale kapde aur kaale mask mein chal raha hai. Saari lights band hain. Ek kaali car bina lights ke aati hai aur break maar deti hai. Driver ne use kaise dekha?", options: [{ t: "Reflective jacket thi", s: 0 }, { t: "Din ka waqt tha", s: 25 }, { t: "Sensor tha", s: 0 }, { t: "Chhat par light thi", s: 0 }] },
+
+            { q: "9 barabar dikhne wali balls hain. 8 ka weight same hai, 1 halki hai. Sirf 2 baar weighing scale use karke use kaise dhundenge?", options: [{ t: "4-4 ke group bana kar", s: 0 }, { t: "2-2-2-3 karke", s: 0 }, { t: "3-3 ke group bana kar", s: 25 }, { t: "Ye mumkin nahi hai", s: 0 }] },
+
+            { q: "Room mein 3 bulb hain, bahar 3 switch. Room mein sirf ek baar ja sakte hain. Teeno bulb kaise pehchanenge?", options: [{ t: "Switch ka sound sun kar", s: 0 }, { t: "Temperature check karke", s: 25 }, { t: "Andaze se", s: 0 }, { t: "Darwaze ke niche se dekh kar", s: 0 }] },
+
+            { q: "Daldal mein fansne par agar aapke paas bhari lohe ki rod hai, toh jaan bachane ke liye kya karenge?", options: [{ t: "Rod ko horizontal pakdenge", s: 25 }, { t: "Rod niche phek denge", s: 0 }, { t: "Rod par khade honge", s: 0 }, { t: "Zor se uchlenge", s: 0 }] },
+
+            { q: "Agar 4 + 4 = 20, 5 + 5 = 30, 6 + 6 = 42, toh 9 + 9 = ?", options: [{ t: "81", s: 0 }, { t: "72", s: 0 }, { t: "90", s: 25 }, { t: "110", s: 0 }] },
+
+            { q: "Plane crash mein 'every single person' mar gaya, lekin 2 log bach gaye. Kaise?", options: [{ t: "Wo plane ke bahar the", s: 0 }, { t: "Wo pilot the", s: 0 }, { t: "Wo shadi-shuda the", s: 25 }, { t: "Wo bache the", s: 0 }] },
+
+            { q: "3 goliyan (pills) hain, har aadhe ghante mein ek khani hai. Teeno khatam hone mein kitna waqt lagega?", options: [{ t: "90 minute", s: 0 }, { t: "60 minute", s: 25 }, { t: "120 minute", s: 0 }, { t: "30 minute", s: 0 }] },
+
+            { q: "Saza-e-maut ke liye 3 kamre hain. 1: Aag, 2: Hatyare, 3: Sher jo 1 saal se bhookhe hain. Kaunsa safe hai?", options: [{ t: "Kamra 1", s: 0 }, { t: "Kamra 3", s: 25 }, { t: "Kamra 2", s: 0 }, { t: "Koi bhi nahi", s: 0 }] },
+
+            { q: "Wo kya hai jo kacha hone par 2kg, gila hone par 1kg aur jalne par 3kg ho jata hai?", options: [{ t: "Baraf", s: 0 }, { t: "Loha", s: 0 }, { t: "Sulphur", s: 25 }, { t: "Koyla", s: 0 }] },
+
+            { q: "Doctor ne 3 injection diye. Har 1 ghante baad ek lagana hai. Total kitne ghante lagenge?", options: [{ t: "3 ghante", s: 0 }, { t: "2 ghante", s: 25 }, { t: "1 ghanta", s: 0 }, { t: "Zero", s: 0 }] },
+
+            { q: "Sequence: 1, 11, 21, 1211, 111221, ?", options: [{ t: "111111", s: 0 }, { t: "222111", s: 0 }, { t: "312211", s: 25 }, { t: "123456", s: 0 }] },
+
+            { q: "Pani aur Wine ke mixture ko ek dusre mein milane par, kis glass mein impurity zyada hogi?", options: [{ t: "Pani wale mein", s: 0 }, { t: "Wine wale mein", s: 0 }, { t: "Dono mein barabar", s: 25 }, { t: "Check nahi kar sakte", s: 0 }] },
+
+            { q: "Kaunsa word hai jisme 5 vowels (A,E,I,O,U) ek hi sequence mein aate hain?", options: [{ t: "Education", s: 0 }, { t: "Queue", s: 0 }, { t: "Abstemious", s: 25 }, { t: "Vowel", s: 0 }] },
+
+            { q: "Andhere mein 52 kaali aur 52 safed socks hain. Match dhundne ke liye kam se kam kitni uthayenge?", options: [{ t: "53", s: 0 }, { t: "2", s: 0 }, { t: "3", s: 25 }, { t: "52", s: 0 }] },
+
+            { q: "Ek aadmi 1930 mein paida hua aur 1930 mein hi mar gaya, fir bhi umar 20 saal thi. Kaise?", options: [{ t: "Time travel", s: 0 }, { t: "Galat record", s: 0 }, { t: "1930 room number tha", s: 25 }, { t: "Calender alag tha", s: 0 }] },
+
+            { q: "Race mein 2nd last position wale ko overtake kiya. Ab aap kis position par hain?", options: [{ t: "Last", s: 0 }, { t: "2nd last", s: 25 }, { t: "3rd last", s: 10 }, { t: "1st", s: 0 }] },
+
+            { q: "10 feet rassi se bandha kutta 15 feet dur rakhi roti kaise khayega?", options: [{ t: "Rassi rubber ki hai", s: 0 }, { t: "Rassi bandhi nahi hai", s: 25 }, { t: "Kutta kood jayega", s: 0 }, { t: "Roti pighal jayegi", s: 0 }] },
+
+            { q: "Missing number: 16, 06, 68, 88, ?, 98", options: [{ t: "78", s: 0 }, { t: "L8", s: 25 }, { t: "90", s: 0 }, { t: "89", s: 0 }] },
+
+            { q: "Boat palatne par 10 logon mein se ek ka bhi baal gila nahi hua. Kyun?", options: [{ t: "Raincoat pehna tha", s: 0 }, { t: "Pani nahi tha", s: 0 }, { t: "Sab ganje the", s: 25 }, { t: "Boat badi thi", s: 0 }] },
+
+            { q: "Agar 1=5, 2=25, 3=325, 4=4325, toh 5=?", options: [{ t: "54325", s: 0 }, { t: "25", s: 0 }, { t: "1", s: 25 }, { t: "625", s: 0 }] },
+
+            { q: "Wo kya hai jo subah 4, dopahar 2 aur sham ko 3 pairon par chalta hai?", options: [{ t: "Janwar", s: 0 }, { t: "Insaan", s: 25 }, { t: "Alien", s: 0 }, { t: "Robot", s: 0 }] },
+
+            { q: "1 kilo loha dub jata hai, par 1000 kilo ka jahaz nahi. Kyun?", options: [{ t: "Jahaz khali hai", s: 0 }, { t: "Namak ka pani", s: 0 }, { t: "Displacement", s: 25 }, { t: "Engine power", s: 0 }] },
+
+            { q: "7 mombatti mein se 3 bujh gayi. Ab kitni bachi?", options: [{ t: "7", s: 0 }, { t: "4", s: 0 }, { t: "3", s: 25 }, { t: "0", s: 0 }] },
+
+            { q: "Wo kya hai jo aage se 'Bhagwan' ne banaya aur peeche se 'Insaan' ne?", options: [{ t: "Bus", s: 0 }, { t: "Bail-Gadi", s: 25 }, { t: "Duniya", s: 0 }, { t: "Computer", s: 0 }] },
+
+            { q: "5 rupaye mein cheez kharidi aur 4 mein bechi, fir bhi lakhon ka munafa hua. Kaise?", options: [{ t: "Chor tha", s: 0 }, { t: "Investment", s: 0 }, { t: "Heere ka vyapari", s: 25 }, { t: "Possible nahi", s: 0 }] },
+
+            { q: "Agar kachua South ki taraf ja raha hai, toh uska mooh kis taraf hoga?", options: [{ t: "South", s: 0 }, { t: "North", s: 0 }, { t: "Shell ke andar", s: 25 }, { t: "Pata nahi", s: 0 }] },
+
+            { q: "Sequence: J, F, M, A, M, J, J, A, S, O, N, ?", options: [{ t: "P", s: 0 }, { t: "D", s: 25 }, { t: "M", s: 0 }, { t: "L", s: 0 }] },
+
+            { q: "Baarish mein bina chhate ke chalne par bhi baal gile nahi hue. Kyun?", options: [{ t: "Baarish kam thi", s: 0 }, { t: "Wo ganja tha", s: 25 }, { t: "Ped ke niche tha", s: 0 }, { t: "Andar tha", s: 0 }] },
+
+            { q: "Kaunsi cheez hai jo hamesha niche aati hai par kabhi upar nahi jati?", options: [{ t: "Paisa", s: 0 }, { t: "Umar", s: 0 }, { t: "Baarish", s: 25 }, { t: "Gubara", s: 0 }] },
+
+            { q: "Guards se rasta puchne ke liye sabse sahi sawal kya hai?", options: [{ t: "Tum sach bolte ho?", s: 0 }, { t: "Dusra guard kya rasta batayega?", s: 25 }, { t: "Sahi rasta batao", s: 0 }, { t: "Main kaun hoon?", s: 0 }] }
+        ];
+        function initQuiz() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+
+            const selected = [...sharpMindQuestions].sort(() => 0.5 - Math.random()).slice(0, 10);
+
+            selected.forEach((item, idx) => {
+                const qCard = document.createElement('div');
+                qCard.className = 'question-card';
+                let ops = [...item.options].sort(() => 0.5 - Math.random());
+                let optionsHtml = ops.map(opt => `
+                    <label>
+                        <input type="radio" name="q${idx}" data-s="${opt.s}">
+                        ${opt.t}
+                    </label>
+                `).join('');
+
+                qCard.innerHTML = `<h3>${idx + 1}. ${item.q}</h3><div class="options">${optionsHtml}</div>`;
+                container.appendChild(qCard);
+            });
+        }
+
+        function calculateResult() {
+            const checked = document.querySelectorAll('input:checked');
+            if (checked.length < 10) return alert("Please answer all questions!");
+
+            let totalScore = 0;
+            checked.forEach(o => totalScore += parseInt(o.dataset.s));
+            let scorePct = Math.round((totalScore / 250) * 100);
+
+            let label = "";
+            let desc = "";
+
+            if (scorePct > 85) {
+                label = "Genius Mind";
+                desc = "Aapka IQ level kamaal ka hai! Aap out-of-the-box sochte hain aur mushkil puzzles ko minton mein solve kar sakte hain.";
+            } else if (scorePct > 55) {
+                label = "Sharp Thinker";
+                desc = "Aap kaafi samajhdaar hain aur logic ko achi tarah pakadte hain. Thodi aur practice aapko genius bana sakti hai.";
+            } else if (scorePct > 30) {
+                label = "Average Brain";
+                desc = "Aapka dimaag normal hai par logic lagane mein thodi jaldbazi kar dete hain. Puzzles solve karne ki aadat dalein.";
+            } else {
+                label = "Slow Thinker";
+                desc = "Aapko mental exercises ki sakht zarurat hai. Har cheez ko thoda gehraayi se sochne ki koshish karein.";
+            }
+
+            document.getElementById('personality-label').innerText = label;
+            document.getElementById('ego-description').innerText = desc;
+            document.getElementById('quiz-container').style.display = 'none';
+            document.getElementById('main-submit').style.display = 'none';
+            document.getElementById('result').style.display = 'block';
+            animateMainCircle(scorePct);
+        }
+
+        function animateMainCircle(target) {
+            let curr = 0;
+            let el = document.getElementById('coreScore');
+            let text = document.getElementById('main-percent');
+            let intr = setInterval(() => {
+                if (curr >= target) clearInterval(intr);
+                el.style.setProperty('--percent', curr);
+                text.innerText = curr + '%';
+                if (curr < target) curr++;
+            }, 20);
+        }
+
+        window.onload = initQuiz;
+        window.addEventListener("load", () => {
+            setTimeout(() => {
+                const loader = document.getElementById("loader");
+                loader.style.opacity = "0";
+                setTimeout(() => loader.style.display = "none", 500);
+            }, 2000);
+        });
+        function calculateResult() {
+            const allQuestions = document.querySelectorAll('.question-card');
+            const checked = document.querySelectorAll('input:checked');
+
+            if (checked.length < 10) {
+                alert("Please answer all questions!");
+                return;
+            }
+
+            let totalScore = 0;
+
+            allQuestions.forEach(card => {
+                const options = card.querySelectorAll('input[type="radio"]');
+
+                options.forEach(opt => {
+                    const label = opt.parentElement;
+                    const score = parseInt(opt.dataset.s);
+
+                    if (score === 25) {
+                        label.classList.add('correct');
+                    }
+
+                    if (opt.checked && score !== 25) {
+                        label.classList.add('wrong');
+                    }
+
+                    opt.disabled = true;
+                });
+            });
+
+            checked.forEach(o => totalScore += parseInt(o.dataset.s));
+            let scorePct = Math.round((totalScore / 250) * 100);
+
+            let labelText = "";
+            let desc = "";
+
+            if (scorePct > 85) {
+                labelText = "Genius Mind";
+                desc = "Aapka IQ level kamaal ka hai! Aap out-of-the-box sochte hain aur mushkil puzzles ko minton mein solve kar sakte hain.";
+            } else if (scorePct > 55) {
+                labelText = "Sharp Thinker";
+                desc = "Aap kaafi samajhdaar hain aur logic ko achi tarah samajhte hain.";
+            } else if (scorePct > 30) {
+                labelText = "Average Brain";
+                desc = "Aapka dimaag normal hai, bas thodi aur logical practice ki zarurat hai.";
+            } else {
+                labelText = "Slow Thinker";
+                desc = "Mental exercises ki madad se aap apni thinking speed improve kar sakte hain.";
+            }
+
+            document.getElementById('personality-label').innerText = labelText;
+            document.getElementById('ego-description').innerText = desc;
+
+            document.getElementById('main-submit').style.display = 'none';
+            document.getElementById('result').style.display = 'block';
+
+            animateMainCircle(scorePct);
+        }
+
+    </script>
+</body>
+
+</html>

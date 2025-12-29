@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindLab - Levels</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<style>
+    .lv {
+        border: 1px solid #e6e7eb;
+    }
+
+    .lv-btn {
+        width: 150px;
+        height: 40px;
+        background-color: #6c63ff;
+        border: none;
+        outline: none;
+        color: white;
+        border-radius: 10px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+</style>
+
+<body>
+    <div class="backkk">
+        <a href="#" id="goBack"><img src="icone/arrow-left-01-stroke-rounded.svg" width="30px"></a>
+    </div>
+    <div class="head">
+        <nav>
+            <div class="logo">
+                <img src="colored-logo.png">
+                <span>MINDLAB</span>
+            </div>
+            <div class="menu">
+                <a href="index.html">HOME</a>
+                <a href="levels.html">LEVELS</a>
+                <a href="motivation.html">MOTIVATION</a>
+                <a href="improve.html">IMPROVE YOURSELF</a>
+                <a href="book.html">BOOKS</a>
+                <a class="bbb" href="levels.html">START<img src="icone/white-roket.svg" width="16px"></a>
+            </div>
+            <button class="menu1" onclick="openNav()"><img src="icone/menu-01-stroke-rounded.svg" width="25px"></button>
+            <div id="mySidenav" class="slider">
+                <div class="co">
+                    <button class="closebtn" onclick="closeNav()"><img
+                            src="icone/cancel-01-stroke-rounded.svg"></button>
+                    <div class="ho"></div>
+                    <div class="li">
+                        <a href="index.html"><img src="icone/home-09-stroke-rounded (1).svg" alt="">HOME</a>
+                        <a href="motivation.html"><img src="icone/idea-stroke-rounded (1).svg" alt="">QUOTES</a>
+                        <a class="acti" href="levels.html"><img src="icone/trade-up-stroke-rounded.svg"
+                                alt=""><span>LEVEL</span></a>
+                        <a href="improve.html"><img src="icone/activity-01-stroke-rounded (1).svg" alt="">IMPROVE</a>
+                        <a href="book.html"><img src="icone/book-02-stroke-rounded (1).svg" alt="">BOOK</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div class="main">
+        <div class="hero-sec">
+            <div class="hero-content">
+                <h1>Choose Your Test Level</h1>
+                <h5 style="color: #aaa;">Select a level based on how deeply you want to analyze your personality.</h5>
+                <a class="bttt" href="#tt">Start Test<img src="icone/white-roket.svg" width="16px"></a>
+                <a href=""><img src="icone/arrow-right-01-stroke-rounded.svg" width="16px">Exlpore MindLab</a>
+            </div>
+            <div class="hero-img">
+                <img src="back/undraw_choose_5kz4.svg" width="500px">
+            </div>
+        </div>
+        <div class="feature-sec">
+            <h2>What MindLab Analyzes</h2>
+            <div class="cards">
+                <span class="feature-card">
+                    <h4>EGO LEVEL</h4>
+                    <img src="icone/user-stroke-rounded.svg" width="50px">
+                    <h6 style="color: #aaa;">Understand how strongly ego influences your thoughts,decisions and behavior in daily life.</h6>
+                    <a class="test" href="egolevel.html">Test</a>
+                </span>
+                <span class="feature-card">
+                    <h4>HELPFULNESS</h4>
+                    <img src="icone/question-stroke-rounded.svg" width="50px">
+                    <h6 style="color: #aaa;">Discover how willing you are t support, understand and help others around you.</h6>
+                    <a class="test" href="helpfullness.html">Test</a>
+                </span>
+                <span class="feature-card">
+                    <h4>MIND SHARP</h4>
+                    <img src="icone/ai-brain-01-stroke-rounded.svg" width="50px">
+                    <h6 style="color: #aaa;">Anayze your thinking speed,clarity and decision-making ability.</h6>
+                    <a class="test" href="mindlevel.html">Test</a>
+                </span>
+            </div>
+        </div>
+        <div class="level-sec" id="tt">
+            <h2>LEVEL CARDS</h2>
+            <div class="card">
+                <a class="lv" href="level1.html">
+                    <h3>Level- 1 Easy</h3>
+                    <br>
+                    <h5>10 Simple Questions</h5>
+                    <h5>Difficulty: Easy</h5>
+                    <h5>Time: 5–7 minutes</h5>
+                    <h5>Purpose: Basic personality check</h5>
+                    <button class="lv-btn">Start Level 1</button>
+
+                    <h6 style="color: #aaa;">
+                        Quick and simple questions to understand your basic personality traits.
+                    </h6>
+                </a>
+                <a class="lv" href="level2.html">
+                    <h3>Level- 2 Medium</h3>
+                    <br>
+                    <h5>15 Deep Questions</h5>
+                    <h5>Difficulty: Medium</h5>
+                    <h5>Time: 10–12 minutes</h5>
+                    <h5>Purpose: Deeper mindset analysis</h5>
+                    <button class="lv-btn">Start Level 2</button>
+
+                    <h6 style="color: #aaa;">
+                        More thoughtful questions to analyze your mindset and behavior deeply.
+                    </h6>
+                </a>
+                <a class="lv">
+                    <h3>Level- 3 Hard</h3>
+                    <br>
+                    <h5>Questions: Coming Soon</h5>
+                    <h5>Difficulty: Hard</h5>
+                    <h5>Purpose: Advanced personality analysis</h5>
+                    <button class="lv-btn">Comming Soon</button>
+
+                    <h6 style="color: #aaa;">Advanced level for deep self-analysis (will be added in future).</h6>
+                </a>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="foot">
+        <div class="footer">
+            <div class="foot-logo">
+                <div class="lo">
+                    <img src="colored-logo.png" width="30px">
+                    MINDLAB
+                </div>
+                <h3>Understand your mind. Improve your life.</h3>
+                <p>MindLab helps you analyze your personality, mindset, ego, and habits through smart questions and
+                    self-growth guidance.</p>
+            </div>
+            <div class="lin">
+                <div class="foot-links">
+                    <h4>Quick Links</h4>
+                    <br>
+                    <a href="index.html">Home</a>
+                    <a href="levels.html">Level</a>
+                    <a href="motivation.html">Motivation</a>
+                    <a href="improve.html">Improve Yourself</a>
+                </div>
+                <div class="foot-features">
+                    <h4>FEATURES</h4>
+                    <br>
+                    <a href="levels.html">Ego Level</a>
+                    <a href="levels.html">Attitude Balance</a>
+                    <a href="levels.html">Sharp Mind</a>
+                    <a href="levels.html">Helpfulness</a>
+                </div>
+            </div>
+        </div>
+        <div class="copy">
+            <div class="dis">
+                <span>This website is created for educational purposes only. The personality results are not medical or
+                    psychological advice.</span>
+            </div>
+            <div class="rights">
+                <span>© 2025 MindLab. All rights reserved.
+                </span>
+            </div>
+        </div>
+    </div>
+    <div id="loader">
+        <div class="loader-box">
+            <div class="ring">
+                <img src="img/maze.gif" width="40px">
+            </div>
+            <div class="bx">
+                <span>MINDLAB</span>
+                <small>Fuel Your Mind</small>
+            </div>
+        </div>
+    </div>
+    <script>
+        function openNav() {
+            document.getElementById("mySidenav").style.width = "120px";
+        }
+
+        function closeNav() {
+            document.getElementById("mySidenav").style.width = "0";
+        }
+        document.body.classList.add("loading");
+
+        window.addEventListener("load", () => {
+            setTimeout(() => {
+                const loader = document.getElementById("loader");
+                loader.style.opacity = "0";
+                loader.style.transition = "opacity 0.5s ease";
+
+                setTimeout(() => {
+                    loader.style.display = "none";
+                    document.body.classList.remove("loading");
+                }, 500);
+
+            }, 1000); // 2 seconds
+        });
+
+
+    </script>
+    <script src="sc.js"></script>
+</body>
+
+</html>
